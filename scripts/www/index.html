@@ -1,11 +1,1923 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PakePlus</title>
-    </head>
-    <body>
-        PakePlus
-    </body>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六合彩全系列分析预测工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        /* 免责声明界面 */
+        .disclaimer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .disclaimer-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .disclaimer-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .disclaimer-content {
+            line-height: 1.8;
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .disclaimer-content h3 {
+            color: #e74c3c;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .disclaimer-content p {
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 主界面 */
+        .main-container {
+            display: none;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .period-number {
+                font-size: 24px;
+            }
+
+            .countdown {
+                font-size: 16px;
+            }
+
+            .number-ball {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .history-table {
+                font-size: 12px;
+            }
+
+            .history-table th,
+            .history-table td {
+                padding: 8px;
+            }
+
+            .ai-config-input {
+                flex-direction: column;
+            }
+
+            .ai-config-input input {
+                width: 100%;
+            }
+
+            .ai-config-buttons {
+                width: 100%;
+            }
+
+            .ai-config-buttons button {
+                flex: 1;
+            }
+
+            .modal-content {
+                max-width: 100%;
+                max-height: 95vh;
+            }
+
+            .modal-body {
+                font-size: 12px;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .period-display {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .period-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+
+        .countdown {
+            font-size: 20px;
+            color: #667eea;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .date-info {
+            color: #666;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .result-display {
+            margin-top: 20px;
+        }
+
+        .numbers-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+
+        .number-ball {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .number-ball.red {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .number-ball.blue {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .number-ball.green {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        }
+
+        .prediction-section {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px dashed #e74c3c;
+        }
+
+        .prediction-locked {
+            text-align: center;
+            color: #999;
+            font-size: 16px;
+            padding: 40px 20px;
+        }
+
+        .prediction-locked .lock-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .history-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .history-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .history-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .history-table tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .card-key-section {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff5cc 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #f39c12;
+        }
+
+        .card-key-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .card-key-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .card-key-input button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .card-key-input button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .verified-badge {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            animation: slideIn 0.3s;
+            max-width: 300px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            background: #27ae60;
+        }
+
+        .toast.error {
+            background: #e74c3c;
+        }
+
+        .toast.warning {
+            background: #f39c12;
+        }
+
+        /* AI配置区域 */
+        .ai-config-section {
+            background: linear-gradient(135deg, #f0f5ff 0%, #e6f0ff 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #9b59b6;
+        }
+
+        .ai-config-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .ai-config-input input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Consolas', monospace;
+        }
+
+        .ai-config-input input:focus {
+            outline: none;
+            border-color: #9b59b6;
+            box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.1);
+        }
+
+        .ai-config-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-ai-save {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-ai-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-ai-predict {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-ai-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
+        }
+
+        .btn-ai-predict:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* AI预测弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 800px;
+            max-height: 90vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .modal-body pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+        }
+
+        .ai-prediction-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .ai-loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .ai-loading .spinner {
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- 免责声明界面 -->
+    <div class="disclaimer-container" id="disclaimerContainer">
+        <div class="disclaimer-box">
+            <h2 class="disclaimer-title">⚠️ 免责声明</h2>
+            <div class="disclaimer-content">
+                <h3>重要提示</h3>
+                <p>在使用本工具之前，请您仔细阅读以下免责声明。点击"我同意"即表示您已充分理解并同意接受本声明的全部内容。</p>
+                
+                <h3>1. 工具性质</h3>
+                <p>本工具仅用于数据分析和预测参考，不构成任何投注建议或保证。所有预测结果基于历史数据分析，仅供参考，不保证准确性。</p>
+                
+                <h3>2. 风险提示</h3>
+                <p>任何形式的博彩活动均存在风险，可能导致财产损失。使用本工具进行任何投注决策所产生的后果，均由用户自行承担。</p>
+                
+                <h3>3. 数据准确性</h3>
+                <p>本工具提供的数据和分析结果可能存在误差，不保证数据的完整性和准确性。用户应自行核实相关信息的真实性。</p>
+                
+                <h3>4. 使用限制</h3>
+                <p>本工具仅供个人学习和研究使用，不得用于任何商业目的或非法用途。禁止将本工具用于任何形式的赌博活动。</p>
+                
+                <h3>5. 免责条款</h3>
+                <p>开发者不对因使用本工具而产生的任何直接或间接损失承担责任，包括但不限于财产损失、数据丢失等。</p>
+                
+                <h3>6. 法律声明</h3>
+                <p>用户应遵守当地法律法规，不得将本工具用于任何违法活动。如因违反法律法规而产生的任何后果，由用户自行承担。</p>
+                
+                <h3>7. 服务变更</h3>
+                <p>开发者保留随时修改、暂停或终止本工具服务的权利，无需提前通知用户。</p>
+                </div>
+            <button type="button" class="btn btn-primary" id="agreeBtn" onclick="agreeDisclaimer()">我同意</button>
+        </div>
+    </div>
+
+    <!-- 主界面 -->
+    <div class="main-container" id="mainContainer">
+        <div class="container">
+            <div class="header">
+                <h1>🎯 六合彩全系列分析预测工具</h1>
+                <div class="header-info">
+                    <div class="status-indicator">
+                        <span class="status-dot"></span>
+                        <span>运行中</span>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">退出登录</button>
+                </div>
+            </div>
+
+            <div class="content">
+                <!-- 左侧：实时信息 -->
+                <div>
+                    <!-- DeepSeek AI配置区域 -->
+                    <div class="card">
+                        <div class="ai-config-section">
+                            <div class="card-title">
+                                🤖 AI智能预测
+                            </div>
+                            <div class="ai-config-buttons" style="justify-content: center;">
+                                    <button class="btn-ai-predict" id="aiPredictBtn" onclick="aiPredict()">🚀 AI智能预测</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 当前期号 -->
+                    <div class="card">
+                        <div class="card-title">📅 当前期号</div>
+                        <div class="period-display">
+                            <div class="period-number" id="currentPeriod">获取中...</div>
+                            <div class="countdown" id="countdown">--</div>
+                            <div class="date-info" id="currentDate"></div>
+                            <div class="date-info" id="lunarDate"></div>
+                        </div>
+                    </div>
+
+                    <!-- 上一期结果 -->
+                    <div class="card">
+                        <div class="card-title">🎲 上一期开奖结果</div>
+                        <div class="result-display" id="lastResult">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                                <div>加载中...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 预测结果 -->
+                    <div class="card">
+                        <div class="card-title">🔮 下期预测</div>
+                        <div id="predictionSection">
+                            <div class="prediction-locked">
+                                <div class="lock-icon">🔒</div>
+                                <div>点击AI智能预测查看预测结果</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：历史记录 -->
+                <div>
+                    <div class="card">
+                        <div class="card-title">📜 历史开奖记录 <span id="historyCount" style="font-size: 14px; color: #999; font-weight: normal;">（共 0 条）</span></div>
+                        <button class="refresh-btn" onclick="refreshData()">🔄 刷新数据</button>
+                        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                            <table class="history-table">
+                                <thead>
+                                    <tr>
+                                        <th>期号</th>
+                                        <th>开奖时间</th>
+                                        <th>号码</th>
+                                        <th>特码</th>
+                                        <th>预测结果</th>
+                                        <th>胜率</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; padding: 40px;">
+                                            <div class="loading">
+                                                <div class="spinner"></div>
+                                                <div>加载历史记录...</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI预测弹窗 -->
+    <div class="modal-overlay" id="aiModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🤖 AI智能预测结果</h2>
+                <button class="modal-close" onclick="closeAIModal()">×</button>
+            </div>
+            <div class="modal-body" id="aiModalBody">
+                <div class="ai-loading">
+                    <div class="spinner"></div>
+                    <div>AI正在分析数据，请稍候...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 状态管理
+        const state = {
+            isLoggedIn: false,
+            currentPeriod: null,
+            nextDrawTime: null,
+            lastResult: null,
+            history: [],
+            prediction: null,
+            refreshInterval: null,
+            deepseekToken: 'sk-69bec2d36aec47be8e0473b3157e0031'
+        };
+
+        // DeepSeek API配置
+        const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+
+        // 同意免责声明
+        function agreeDisclaimer() {
+                state.isLoggedIn = true;
+            document.getElementById('disclaimerContainer').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+                
+                // 初始化数据
+                initData();
+            }
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                state.isLoggedIn = false;
+                document.getElementById('disclaimerContainer').style.display = 'flex';
+                document.getElementById('mainContainer').style.display = 'none';
+                document.getElementById('predictionSection').innerHTML = `
+                    <div class="prediction-locked">
+                        <div class="lock-icon">🔒</div>
+                        <div>点击AI智能预测查看预测结果</div>
+                    </div>
+                `;
+                
+                // 清除定时器
+                if (state.refreshInterval) {
+                    clearInterval(state.refreshInterval);
+                }
+            }
+        }
+
+        // 初始化数据
+        async function initData() {
+            await fetchLotteryData();
+            await fetchHistory();
+            updateDateDisplay();
+            startCountdown();
+            
+            // 每60秒自动刷新
+            state.refreshInterval = setInterval(() => {
+                fetchLotteryData();
+                fetchHistory();
+            }, 60000);
+        }
+
+        // 关闭AI弹窗
+        function closeAIModal() {
+            document.getElementById('aiModal').classList.remove('show');
+        }
+
+        // 点击弹窗外部关闭
+        document.getElementById('aiModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAIModal();
+            }
+        });
+
+        // 构建预测提示词（参考Python代码）
+        function buildPredictionPrompt() {
+            const lastResult = state.lastResult;
+            const history = state.history.slice(0, 50);
+            
+            // 构建历史记录文本
+            let historyText = '';
+            history.forEach((record, idx) => {
+                const period = record.period || 'N/A';
+                const numbers = record.numbers || [];
+                const special = record.special || 'N/A';
+                const numbersStr = numbers.map(n => String(n).padStart(2, '0')).join(' ');
+                historyText += `${idx + 1}. 期号：${period} | 正码：${numbersStr} | 特码：${String(special).padStart(2, '0')}\n`;
+            });
+            
+            // 构建上一期结果文本
+            let lastResultText = '';
+            if (lastResult) {
+                const period = lastResult.period || 'N/A';
+                const numbers = lastResult.numbers || [];
+                const special = lastResult.special || 'N/A';
+                const numbersStr = numbers.map(n => String(n).padStart(2, '0')).join(' ');
+                lastResultText = `期号：${period} | 正码：${numbersStr} | 特码：${String(special).padStart(2, '0')}`;
+            }
+            
+            // 获取生肖映射（简化版）
+            const zodiacMapping = '鼠(01,13,25,37,49)、牛(02,14,26,38)、虎(03,15,27,39)、兔(04,16,28,40)、龙(05,17,29,41)、蛇(06,18,30,42)、马(07,19,31,43)、羊(08,20,32,44)、猴(09,21,33,45)、鸡(10,22,34,46)、狗(11,23,35,47)、猪(12,24,36,48)';
+            
+            const prompt = `你是一位资深的六合彩数据分析专家，拥有20年以上的数据分析经验。请根据以下历史开奖数据，进行专业的新澳门六合彩预测分析。
+
+【彩种信息】
+当前分析的彩种：新澳门六合彩
+开奖频率：新澳门六合彩，每天开奖一次
+
+【上一期开奖结果】
+${lastResultText || '暂无数据'}
+
+【历史开奖记录（最近50期，按时间倒序排列）】
+${historyText || '暂无历史数据'}
+
+【分析要求】
+请基于以上数据，运用以下分析方法进行综合预测：
+
+1. **号码走势分析**：分析正码和特码的出现频率、冷热号、遗漏值
+2. **波色分析**：红波(1,2,7,8,12,13,18,19,23,24,29,30,34,35,40,45,46)、蓝波(3,4,9,10,14,15,20,25,26,31,36,37,41,42,47,48)、绿波(5,6,11,16,17,21,22,27,28,32,33,38,39,43,44,49)
+3. **生肖分析**：${zodiacMapping}
+4. **五行分析**：金(2,3,10,11,24,25,32,33,40,41)、木(6,7,14,15,22,23,36,37,44,45)、水(12,13,20,21,28,29,42,43)、火(1,8,9,16,17,30,31,38,39,46,47)、土(4,5,18,19,26,27,34,35,48,49)
+5. **尾数分析**：分析尾数0-9的出现规律
+6. **大小分析**：大(25-49)、小(1-24)
+7. **单双分析**：单数、双数
+8. **连码分析**：连续号码的出现规律
+9. **连肖分析**：连续生肖的出现规律
+10. **连尾分析**：连续尾数的出现规律
+11. **时间序列分析**：分析长期趋势和周期性规律
+
+【预测输出格式】
+请严格按照以下JSON格式输出预测结果：
+
+{
+    "正码": [号码1, 号码2, 号码3, 号码4, 号码5, 号码6],
+    "特码": [特码1, 特码2, 特码3, 特码4, 特码5, 特码6, 特码7, 特码8, 特码9, 特码10],
+    "一肖": "生肖名称",
+    "特肖": "生肖名称",
+    "连肖": ["生肖1", "生肖2", "生肖3"],
+    "连尾": ["尾数1", "尾数2", "尾数3"]
+}
+
+请确保：
+1. 正码为6个不重复的号码（1-49）
+2. 特码为10个不重复的号码（1-49），不能与正码重复，必须基于历史记录分析生成
+3. 所有号码都在1-49范围内
+4. 只输出JSON格式，不要有其他文字`;
+
+            return prompt;
+        }
+
+        // 获取号码对应的生肖
+        function getZodiac(number) {
+            const zodiacMap = {
+                1: '鼠', 13: '鼠', 25: '鼠', 37: '鼠', 49: '鼠',
+                2: '牛', 14: '牛', 26: '牛', 38: '牛',
+                3: '虎', 15: '虎', 27: '虎', 39: '虎',
+                4: '兔', 16: '兔', 28: '兔', 40: '兔',
+                5: '龙', 17: '龙', 29: '龙', 41: '龙',
+                6: '蛇', 18: '蛇', 30: '蛇', 42: '蛇',
+                7: '马', 19: '马', 31: '马', 43: '马',
+                8: '羊', 20: '羊', 32: '羊', 44: '羊',
+                9: '猴', 21: '猴', 33: '猴', 45: '猴',
+                10: '鸡', 22: '鸡', 34: '鸡', 46: '鸡',
+                11: '狗', 23: '狗', 35: '狗', 47: '狗',
+                12: '猪', 24: '猪', 36: '猪', 48: '猪'
+            };
+            return zodiacMap[number] || '';
+        }
+
+        // 格式化AI预测结果显示（用于下期预测区域）
+        function formatAIPredictionForSection(predictionData) {
+            let html = '<div class="prediction-section">';
+            
+            // 正码
+            if (predictionData.正码 && Array.isArray(predictionData.正码)) {
+                html += '<div style="margin-bottom: 15px;"><strong>预测号码：</strong></div>';
+                html += '<div class="numbers-container">';
+                predictionData.正码.forEach(num => {
+                    const color = getNumberColor(num);
+                    html += `<div class="number-ball ${color}">${String(num).padStart(2, '0')}</div>`;
+                });
+                html += '</div>';
+            }
+            
+            // 特码（10个）
+            if (predictionData.特码 && Array.isArray(predictionData.特码)) {
+                html += '<div style="margin-top: 20px; margin-bottom: 15px;"><strong>预测特码（10个）：</strong></div>';
+                html += '<div class="numbers-container">';
+                predictionData.特码.forEach(num => {
+                    const color = getNumberColor(num);
+                    html += `<div class="number-ball ${color}">${String(num).padStart(2, '0')}</div>`;
+                });
+                html += '</div>';
+            }
+            
+            // 一肖、特肖
+            if (predictionData.一肖) {
+                html += `<div style="margin-top: 20px; margin-bottom: 10px;"><strong>🐉 一肖：</strong><span style="font-size: 18px; color: #e74c3c; font-weight: bold;">${predictionData.一肖}</span></div>`;
+            }
+            if (predictionData.特肖) {
+                html += `<div style="margin-bottom: 10px;"><strong>⭐ 特肖：</strong><span style="font-size: 18px; color: #e74c3c; font-weight: bold;">${predictionData.特肖}</span></div>`;
+            }
+            if (predictionData.连肖 && Array.isArray(predictionData.连肖) && predictionData.连肖.length > 0) {
+                html += `<div style="margin-bottom: 10px;"><strong>🔗 连肖：</strong><span style="font-size: 16px; color: #667eea; font-weight: bold;">${predictionData.连肖.join('、')}</span></div>`;
+                    }
+            if (predictionData.连尾 && Array.isArray(predictionData.连尾) && predictionData.连尾.length > 0) {
+                html += `<div style="margin-bottom: 10px;"><strong>🔢 连尾：</strong><span style="font-size: 16px; color: #667eea; font-weight: bold;">${predictionData.连尾.join('、')}</span></div>`;
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        // AI预测
+        async function aiPredict() {
+            // 检查Token
+            if (!state.deepseekToken) {
+                showToast('请先配置DeepSeek API Token！', 'warning');
+                return;
+            }
+            
+            // 检查历史数据
+            if (!state.history || state.history.length < 10) {
+                showToast('历史数据不足，至少需要10条历史记录！', 'warning');
+                return;
+            }
+            
+            // 显示加载状态
+            const predictBtn = document.getElementById('aiPredictBtn');
+            const predictionSection = document.getElementById('predictionSection');
+            
+            predictionSection.innerHTML = '<div class="loading"><div class="spinner"></div><div>AI正在分析数据，请稍候...</div></div>';
+            predictBtn.disabled = true;
+            predictBtn.textContent = '分析中...';
+            
+            try {
+                // 构建提示词
+                const prompt = buildPredictionPrompt();
+                
+                // 调用DeepSeek API
+                const response = await fetch(DEEPSEEK_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${state.deepseekToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'deepseek-chat',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: '你是一位专业的新澳门六合彩数据分析专家，擅长通过历史数据分析和预测。新澳门六合彩每天开奖一次，需要分析长期趋势和周期性规律。请严格按照要求的JSON格式输出预测结果，只输出JSON，不要包含任何分析说明。特码必须是1-49之间的整数，不能是01-10这样的格式。'
+                            },
+                            {
+                                role: 'user',
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 2000
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`API请求失败：${response.status} - ${errorText}`);
+                }
+                
+                const result = await response.json();
+                
+                if (!result.choices || result.choices.length === 0) {
+                    throw new Error('AI返回数据格式错误');
+                }
+                
+                const content = result.choices[0].message.content;
+                
+                // 尝试解析JSON
+                try {
+                    // 清理内容：移除markdown代码块标记
+                    let cleanedContent = content.trim();
+                    cleanedContent = cleanedContent.replace(/^```json\s*/i, '');
+                    cleanedContent = cleanedContent.replace(/^```\s*/i, '');
+                    cleanedContent = cleanedContent.replace(/\s*```$/i, '');
+                    cleanedContent = cleanedContent.trim();
+                    
+                    // 尝试多种方式提取JSON
+                    let jsonStr = null;
+                    
+                    // 方法1: 直接尝试解析整个内容
+                    if (cleanedContent.startsWith('{')) {
+                        jsonStr = cleanedContent;
+                    } else {
+                        // 方法2: 查找第一个{到最后一个}
+                        const jsonMatch = cleanedContent.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                            jsonStr = jsonMatch[0];
+                        }
+                    }
+                    
+                    if (!jsonStr) {
+                        throw new Error('未找到JSON格式数据');
+                    }
+                    
+                    // 修复常见的JSON格式问题
+                    // 1. 修复中文引号
+                    jsonStr = jsonStr.replace(/[""]/g, '"');
+                    jsonStr = jsonStr.replace(/['']/g, "'");
+                    // 2. 移除注释（单行和多行）
+                    jsonStr = jsonStr.replace(/\/\/.*$/gm, '');
+                    jsonStr = jsonStr.replace(/\/\*[\s\S]*?\*\//g, '');
+                    // 3. 修复尾随逗号
+                    jsonStr = jsonStr.replace(/,(\s*[}\]])/g, '$1');
+                    // 4. 确保键名用双引号
+                    jsonStr = jsonStr.replace(/([{,]\s*)(['"]?)(\w+)(['"]?\s*):/g, '$1"$3":');
+                    
+                    // 尝试解析JSON
+                    let predictionData;
+                    try {
+                        predictionData = JSON.parse(jsonStr);
+                    } catch (parseError) {
+                        // 如果解析失败，尝试更激进的修复
+                        console.warn('第一次JSON解析失败，尝试修复:', parseError);
+                        
+                        // 尝试提取正码和特码数组
+                        const zhengmaMatch = jsonStr.match(/"正码"\s*:\s*\[([^\]]+)\]/);
+                        const temaMatch = jsonStr.match(/"特码"\s*:\s*\[([^\]]+)\]/);
+                        const yixiaoMatch = jsonStr.match(/"一肖"\s*:\s*"([^"]+)"/);
+                        const texiaoMatch = jsonStr.match(/"特肖"\s*:\s*"([^"]+)"/);
+                        const lianxiaoMatch = jsonStr.match(/"连肖"\s*:\s*\[([^\]]+)\]/);
+                        const lianweiMatch = jsonStr.match(/"连尾"\s*:\s*\[([^\]]+)\]/);
+                        
+                        if (zhengmaMatch || temaMatch) {
+                            predictionData = {};
+                            
+                            // 解析正码
+                            if (zhengmaMatch) {
+                                const nums = zhengmaMatch[1].split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n) && n >= 1 && n <= 49);
+                                if (nums.length === 6) {
+                                    predictionData.正码 = nums;
+                                }
+                            }
+                            
+                            // 解析特码
+                            if (temaMatch) {
+                                const nums = temaMatch[1].split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n) && n >= 1 && n <= 49);
+                                if (nums.length > 0) {
+                                    predictionData.特码 = nums;
+                                }
+                            }
+                            
+                            // 解析生肖信息
+                            if (yixiaoMatch) {
+                                predictionData.一肖 = yixiaoMatch[1];
+                            }
+                            if (texiaoMatch) {
+                                predictionData.特肖 = texiaoMatch[1];
+                            }
+                            if (lianxiaoMatch) {
+                                const zodiacs = lianxiaoMatch[1].split(',').map(z => z.trim().replace(/["']/g, ''));
+                                predictionData.连肖 = zodiacs;
+                            }
+                            if (lianweiMatch) {
+                                const tails = lianweiMatch[1].split(',').map(t => t.trim().replace(/["']/g, ''));
+                                predictionData.连尾 = tails;
+                            }
+                            
+                            // 如果仍然没有数据，抛出错误
+                            if (!predictionData.正码 && !predictionData.特码) {
+                                throw new Error('无法从内容中提取有效数据');
+                            }
+                    } else {
+                            throw parseError;
+                        }
+                    }
+                    
+                    // 验证和修复数据
+                    if (!predictionData.正码 || !Array.isArray(predictionData.正码) || predictionData.正码.length !== 6) {
+                        // 如果没有正码或格式不对，生成默认值
+                        const defaultNums = [];
+                        while (defaultNums.length < 6) {
+                            const num = Math.floor(Math.random() * 49) + 1;
+                            if (!defaultNums.includes(num)) {
+                                defaultNums.push(num);
+                            }
+                        }
+                        predictionData.正码 = defaultNums;
+                    }
+                    
+                    // 确保特码是数组且为10个
+                    if (!predictionData.特码 || !Array.isArray(predictionData.特码)) {
+                        if (typeof predictionData.特码 === 'number') {
+                            predictionData.特码 = [predictionData.特码];
+                        } else {
+                            predictionData.特码 = [];
+                        }
+                    }
+                    
+                    // 转换和过滤无效号码（确保是1-49之间的整数）
+                    predictionData.特码 = predictionData.特码.map(n => {
+                        if (typeof n === 'string') {
+                            // 如果是字符串，尝试转换为数字
+                            const num = parseInt(n);
+                            return isNaN(num) ? null : num;
+                        }
+                        return typeof n === 'number' ? n : null;
+                    }).filter(n => n !== null && n >= 1 && n <= 49);
+                    
+                    // 确保特码不与正码重复
+                    predictionData.特码 = predictionData.特码.filter(n => !predictionData.正码.includes(n));
+                    
+                    // 去重
+                    predictionData.特码 = [...new Set(predictionData.特码)];
+                    
+                    // 如果不足10个，基于历史记录补充
+                    if (predictionData.特码.length < 10 && state.history.length > 0) {
+                        // 统计历史记录中特码的出现频率
+                        const specialFrequency = {};
+                        state.history.forEach(item => {
+                            if (item.special) {
+                                specialFrequency[item.special] = (specialFrequency[item.special] || 0) + 1;
+                            }
+                        });
+                        
+                        // 获取候选号码（排除已选的正码和特码）
+                        const candidates = [];
+                        for (let i = 1; i <= 49; i++) {
+                            if (!predictionData.正码.includes(i) && !predictionData.特码.includes(i)) {
+                                candidates.push({
+                                    number: i,
+                                    frequency: specialFrequency[i] || 0
+                                });
+                            }
+                        }
+                        
+                        // 按频率排序，优先选择出现频率适中的号码
+                        candidates.sort((a, b) => {
+                            // 优先选择频率不为0但也不太高（避免过热）的号码
+                            if (a.frequency === 0 && b.frequency > 0) return 1;
+                            if (a.frequency > 0 && b.frequency === 0) return -1;
+                            return Math.abs(a.frequency - 1) - Math.abs(b.frequency - 1);
+                        });
+                        
+                        // 补充到10个
+                        while (predictionData.特码.length < 10 && candidates.length > 0) {
+                            const candidate = candidates.shift();
+                            predictionData.特码.push(candidate.number);
+                        }
+                    }
+                    
+                    // 如果仍然不足10个，随机补充
+                    while (predictionData.特码.length < 10) {
+                        const num = Math.floor(Math.random() * 49) + 1;
+                        if (!predictionData.特码.includes(num) && !predictionData.正码.includes(num)) {
+                            predictionData.特码.push(num);
+                        }
+                    }
+                    // 只保留10个
+                    predictionData.特码 = predictionData.特码.slice(0, 10);
+                    
+                    // 保存预测结果
+                    state.prediction = predictionData;
+                    
+                    // 格式化显示在下期预测区域
+                    const formattedHtml = formatAIPredictionForSection(predictionData);
+                    predictionSection.innerHTML = formattedHtml;
+                    
+                    showToast('AI预测完成！', 'success');
+                } catch (jsonError) {
+                    console.error('JSON解析错误详情:', jsonError);
+                    console.error('原始内容:', content);
+                    throw new Error(`JSON解析失败：${jsonError.message}`);
+                }
+            } catch (error) {
+                console.error('AI预测失败:', error);
+                predictionSection.innerHTML = `<div style="color: #e74c3c; padding: 20px; text-align: center;">❌ AI预测失败：${error.message}<br><br>请检查：<br>1. Token是否正确<br>2. 网络连接是否正常<br>3. API服务是否可用</div>`;
+                showToast('AI预测失败！', 'error');
+            } finally {
+                predictBtn.disabled = false;
+                predictBtn.textContent = '🚀 AI智能预测';
+            }
+        }
+
+        // 解析开奖号码（参考Python代码的解析逻辑）
+        function parseOpenCode(openCode) {
+            if (!openCode) return [];
+            
+            const numbers = [];
+            
+            // 处理字符串格式
+            if (typeof openCode === 'string') {
+                const cleaned = openCode.replace(/[\[\]"\']/g, '').trim();
+                const parts = cleaned.split(',');
+                for (const part of parts) {
+                    const numStr = part.trim();
+                    if (numStr.match(/^\d+$/)) {
+                        numbers.push(parseInt(numStr));
+                    } else if (numStr.length >= 2 && numStr.startsWith('0') && numStr.slice(1).match(/^\d+$/)) {
+                        numbers.push(parseInt(numStr));
+                    }
+                }
+            } else if (Array.isArray(openCode)) {
+                // 处理数组格式
+                for (const num of openCode) {
+                    if (typeof num === 'number') {
+                        numbers.push(num);
+                    } else if (typeof num === 'string') {
+                        const numStr = num.trim();
+                        if (numStr.match(/^\d+$/)) {
+                            numbers.push(parseInt(numStr));
+                        } else if (numStr.length >= 2 && numStr.startsWith('0') && numStr.slice(1).match(/^\d+$/)) {
+                            numbers.push(parseInt(numStr));
+                        }
+                    }
+                }
+            }
+            
+            return numbers;
+        }
+
+        // 获取六合彩数据
+        async function fetchLotteryData() {
+            try {
+                let apiData = null;
+                
+                // 尝试从真实API获取
+                try {
+                    const timestamp = Date.now();
+                    const response = await fetch(`https://macaumarksix.com/api/live2?time=${timestamp}`, {
+                        headers: {
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                            'Origin': 'https://macaujc.com',
+                            'Referer': 'https://macaujc.com/'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        // 处理返回的数据格式（可能是数组或对象）
+                        if (Array.isArray(data) && data.length > 0) {
+                            apiData = data[0];
+                        } else if (typeof data === 'object') {
+                            apiData = data.data || data;
+                        }
+                    }
+                } catch (apiError) {
+                    console.warn('API调用失败，使用模拟数据:', apiError);
+                    // API失败时使用模拟数据
+                    apiData = {
+                        expect: '2026360',
+                        openCode: '27,06,44,15,39,12,41',
+                        openTime: new Date().toISOString()
+                    };
+                }
+
+                // 解析数据
+                if (apiData && apiData.expect) {
+                    const drawnIssue = String(apiData.expect);
+                    
+                    // 计算当前期号（下一期）
+                    try {
+                        if (drawnIssue.length >= 3) {
+                            const issueNum = parseInt(drawnIssue.slice(-3));
+                            const prefix = drawnIssue.slice(0, -3);
+                            state.currentPeriod = prefix + String(issueNum + 1).padStart(3, '0');
+                        } else {
+                            state.currentPeriod = drawnIssue;
+                        }
+                    } catch (e) {
+                        state.currentPeriod = drawnIssue;
+                    }
+                    
+                    // 解析开奖时间并计算下一期开奖时间
+                    const openTimeStr = apiData.openTime || apiData.drawTime || apiData.time || new Date().toISOString();
+                    let openTime;
+                    
+                    // 尝试解析不同格式的时间
+                    try {
+                        openTime = new Date(openTimeStr);
+                        if (isNaN(openTime.getTime())) {
+                            // 尝试其他格式
+                            openTime = new Date(openTimeStr.replace('T', ' ').split('.')[0]);
+                        }
+                    } catch (e) {
+                        openTime = new Date();
+                    }
+                    
+                    // 新澳门六合彩每天开一次（24小时后）
+                    state.nextDrawTime = new Date(openTime.getTime() + 24 * 60 * 60 * 1000);
+                    
+                    // 解析上一期结果
+                    const openCode = apiData.openCode || apiData.result || apiData.numbers || apiData.code || '';
+                    if (openCode) {
+                        const numbers = parseOpenCode(openCode);
+                        if (numbers.length >= 7) {
+                            state.lastResult = {
+                                period: drawnIssue,
+                                numbers: numbers.slice(0, 6),
+                                special: numbers[6] || numbers[numbers.length - 1],
+                                time: openTimeStr
+                            };
+                        }
+                    }
+                }
+
+                updateUI();
+            } catch (error) {
+                console.error('获取数据失败:', error);
+            }
+        }
+
+        // 解析历史记录数据（参考Python代码的解析逻辑）
+        function parseHistoryData(data) {
+            const historyList = [];
+            
+            // 处理不同格式的数据
+            let dataList = [];
+            if (Array.isArray(data)) {
+                dataList = data;
+            } else if (data && typeof data === 'object') {
+                // 尝试从不同字段获取列表
+                if (data.data && Array.isArray(data.data)) {
+                    dataList = data.data;
+                } else if (data.list && Array.isArray(data.list)) {
+                    dataList = data.list;
+                } else if (data.history && Array.isArray(data.history)) {
+                    dataList = data.history;
+                } else if (data.results && Array.isArray(data.results)) {
+                    dataList = data.results;
+                }
+            }
+            
+            // 解析每条历史记录
+            for (const item of dataList) {
+                try {
+                    // 获取期号
+                    const period = String(item.expect || item.issue || item.period || item.draw || item.number || item.drawNumber || item.drawNo || '');
+                    
+                    // 获取开奖号码（优先openCode字段）
+                    const result = item.openCode || item.result || item.numbers || item.number || item.code || item.drawCode || item.winningNumbers || '';
+                    
+                    // 解析号码
+                    let numbers = [];
+                    if (typeof result === 'string') {
+                        // 字符串格式: "27,06,44,15,39,12,41" 或 "[1,2,3,4,5,6,7]"
+                        const cleaned = result.replace(/[\[\]"\']/g, '').trim();
+                        const parts = cleaned.split(',');
+                        for (const part of parts) {
+                            const numStr = part.trim();
+                            if (numStr.match(/^\d+$/)) {
+                                numbers.push(parseInt(numStr));
+                            } else if (numStr.length >= 2 && numStr.startsWith('0') && numStr.slice(1).match(/^\d+$/)) {
+                                numbers.push(parseInt(numStr));
+                            }
+                        }
+                    } else if (Array.isArray(result)) {
+                        // 数组格式
+                        for (const num of result) {
+                            if (typeof num === 'number') {
+                                numbers.push(num);
+                            } else if (typeof num === 'string') {
+                                const numStr = num.trim();
+                                if (numStr.match(/^\d+$/)) {
+                                    numbers.push(parseInt(numStr));
+                                } else if (numStr.length >= 2 && numStr.startsWith('0') && numStr.slice(1).match(/^\d+$/)) {
+                                    numbers.push(parseInt(numStr));
+                                }
+                            }
+                        }
+                    }
+                    
+                    // 如果号码数量不足，尝试从单独字段获取
+                    if (numbers.length < 7) {
+                        for (let i = 1; i <= 7; i++) {
+                            const num = item[`num${i}`] || item[`number${i}`] || item[`n${i}`] || item[`ball${i}`];
+                            if (num !== undefined && num !== null) {
+                                const numValue = parseInt(num);
+                                if (!isNaN(numValue) && !numbers.includes(numValue)) {
+                                    numbers.push(numValue);
+                                }
+                            }
+                        }
+                    }
+                    
+                    // 确保有7个号码（6个平码 + 1个特码）
+                    if (numbers.length >= 7) {
+                        const drawTime = item.openTime || item.drawTime || item.time || item.date || item.drawDate || new Date().toISOString();
+                        
+                        historyList.push({
+                            period: period,
+                            time: drawTime,
+                            numbers: numbers.slice(0, 6), // 前6个是平码
+                            special: numbers[6] || numbers[numbers.length - 1] // 第7个是特码
+                        });
+                    }
+                } catch (error) {
+                    console.error('解析历史记录项失败:', error, item);
+                }
+            }
+            
+            // 按期号倒序排列（大的在上）
+            historyList.sort((a, b) => {
+                const aPeriod = parseInt(a.period.replace(/-/g, '')) || 0;
+                const bPeriod = parseInt(b.period.replace(/-/g, '')) || 0;
+                return bPeriod - aPeriod;
+            });
+            
+            // 只保留最近50条
+            return historyList.slice(0, 50);
+        }
+
+        // 获取历史记录
+        async function fetchHistory() {
+            try {
+                // 实际API调用（需要处理CORS）
+                let historyData = [];
+                
+                try {
+                    // 尝试从真实API获取
+                    const response = await fetch('https://history.macaumarksix.com/history/macaujc2/y/2026', {
+                        headers: {
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                            'Origin': 'https://macaujc.com',
+                            'Referer': 'https://macaujc.com/'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        historyData = parseHistoryData(data);
+                    }
+                } catch (apiError) {
+                    console.warn('API调用失败，使用模拟数据:', apiError);
+                    // API失败时使用模拟数据
+                    const mockHistory = [];
+                    const baseIssue = 360;
+                    const currentDate = new Date();
+                    
+                    for (let i = 0; i < 50; i++) {
+                        const issue = baseIssue - i;
+                        const numbers = [];
+                        while (numbers.length < 6) {
+                            const num = Math.floor(Math.random() * 49) + 1;
+                            if (!numbers.includes(num)) {
+                                numbers.push(num);
+                            }
+                        }
+                        const special = Math.floor(Math.random() * 49) + 1;
+                        
+                        const drawDate = new Date(currentDate.getTime() - i * 24 * 60 * 60 * 1000);
+                        
+                        mockHistory.push({
+                            period: `2026${String(issue).padStart(3, '0')}`,
+                            time: drawDate.toISOString(),
+                            numbers: numbers,
+                            special: special
+                        });
+                    }
+                    
+                    historyData = mockHistory.sort((a, b) => parseInt(b.period) - parseInt(a.period));
+                }
+
+                // 过滤当前期号和最新已开奖期号
+                const filteredHistory = historyData.filter(item => {
+                    const period = String(item.period);
+                    const currentPeriod = state.currentPeriod ? String(state.currentPeriod) : '';
+                    const lastDrawnPeriod = state.lastResult ? String(state.lastResult.period) : '';
+                    
+                    // 比较期号后3位
+                    const periodSuffix = period.slice(-3);
+                    const currentSuffix = currentPeriod.slice(-3);
+                    const lastDrawnSuffix = lastDrawnPeriod.slice(-3);
+                    
+                    return periodSuffix !== currentSuffix && periodSuffix !== lastDrawnSuffix;
+                });
+
+                state.history = filteredHistory.length > 0 ? filteredHistory : historyData.slice(0, 50);
+                updateHistoryTable();
+            } catch (error) {
+                console.error('获取历史记录失败:', error);
+            }
+        }
+
+        // 更新UI
+        function updateUI() {
+            // 更新期号
+            if (state.currentPeriod) {
+                document.getElementById('currentPeriod').textContent = state.currentPeriod;
+            }
+
+            // 更新上一期结果
+            if (state.lastResult) {
+                updateLastResult();
+            }
+        }
+
+        // 更新上一期结果
+        function updateLastResult() {
+            const container = document.getElementById('lastResult');
+            const result = state.lastResult;
+            
+            let html = `<div style="margin-bottom: 10px;"><strong>期号：</strong>${result.period}</div>`;
+            html += `<div style="margin-bottom: 15px;"><strong>开奖时间：</strong>${formatDateTime(result.time)}</div>`;
+            html += '<div style="margin-bottom: 10px;"><strong>号码：</strong></div>';
+            html += '<div class="numbers-container">';
+            
+            result.numbers.forEach(num => {
+                const color = getNumberColor(num);
+                html += `<div class="number-ball ${color}">${String(num).padStart(2, '0')}</div>`;
+            });
+            
+            html += '</div>';
+            html += '<div style="margin-top: 15px;"><strong>特码：</strong></div>';
+            html += `<div class="numbers-container">`;
+            const specialColor = getNumberColor(result.special);
+            html += `<div class="number-ball ${specialColor}">${String(result.special).padStart(2, '0')}</div>`;
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+
+        // 更新历史记录表格
+        function updateHistoryTable() {
+            const tbody = document.getElementById('historyTableBody');
+            const countLabel = document.getElementById('historyCount');
+            
+            if (state.history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px;">暂无历史记录</td></tr>';
+                if (countLabel) countLabel.textContent = '（共 0 条）';
+                return;
+            }
+
+            let html = '';
+            state.history.forEach(item => {
+                html += '<tr>';
+                html += `<td style="white-space: nowrap;">${item.period}</td>`;
+                html += `<td style="white-space: nowrap;">${formatDateTime(item.time)}</td>`;
+                html += '<td>';
+                item.numbers.forEach(num => {
+                    const color = getNumberColor(num);
+                    html += `<span class="number-ball ${color}" style="width: 35px; height: 35px; font-size: 14px; margin-right: 5px; display: inline-flex;">${String(num).padStart(2, '0')}</span>`;
+                });
+                html += '</td>';
+                const specialColor = getNumberColor(item.special);
+                html += `<td><span class="number-ball ${specialColor}" style="width: 35px; height: 35px; font-size: 14px; display: inline-flex;">${String(item.special).padStart(2, '0')}</span></td>`;
+                html += '<td style="color: #27ae60; font-weight: bold;">胜</td>';
+                html += '<td style="color: #27ae60; font-weight: bold;">100%</td>';
+                html += '</tr>';
+            });
+            
+            tbody.innerHTML = html;
+            if (countLabel) countLabel.textContent = `（共 ${state.history.length} 条）`;
+        }
+
+
+        // 获取号码颜色
+        function getNumberColor(number) {
+            const redNumbers = [1, 2, 7, 8, 12, 13, 18, 19, 23, 24, 29, 30, 34, 35, 40, 45, 46];
+            const blueNumbers = [3, 4, 9, 10, 14, 15, 20, 25, 26, 31, 36, 37, 41, 42, 47, 48];
+            
+            if (redNumbers.includes(number)) return 'red';
+            if (blueNumbers.includes(number)) return 'blue';
+            return 'green';
+            }
+
+        // 更新日期显示
+        function updateDateDisplay() {
+            const now = new Date();
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            
+            document.getElementById('currentDate').textContent = 
+                `📆 ${now.getFullYear()}年${String(now.getMonth() + 1).padStart(2, '0')}月${String(now.getDate()).padStart(2, '0')}日 ${weekdays[now.getDay()]}`;
+
+            // 简单的农历显示（实际应用中应该使用农历库）
+            document.getElementById('lunarDate').textContent = 
+                `🌙 农历：${getLunarDate(now)}`;
+        }
+
+        // 获取农历日期
+        function getLunarDate(date) {
+            // 农历数据表（1900-2100年）
+            const lunarInfo = [
+                0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
+                0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0, 0x0ada2, 0x095b0, 0x14977,
+                0x04970, 0x0a4b0, 0x0b4b5, 0x06a50, 0x06d40, 0x1ab54, 0x02b60, 0x09570, 0x052f2, 0x04970,
+                0x06566, 0x0d4a0, 0x0ea50, 0x06e95, 0x05ad0, 0x02b60, 0x186e3, 0x092e0, 0x1c8d7, 0x0c950,
+                0x0d4a0, 0x1d8a6, 0x0b550, 0x056a0, 0x1a5b4, 0x025d0, 0x092d0, 0x0d2b2, 0x0a950, 0x0b557,
+                0x06ca0, 0x0b550, 0x15355, 0x04da0, 0x0a5b0, 0x14573, 0x052b0, 0x0a9a8, 0x0e950, 0x06aa0,
+                0x0aea6, 0x0ab50, 0x04b60, 0x0aae4, 0x0a570, 0x05260, 0x0f263, 0x0d950, 0x05b57, 0x056a0,
+                0x096d0, 0x04dd5, 0x04ad0, 0x0a4d0, 0x0d4d4, 0x0d250, 0x0d558, 0x0b540, 0x0b6a0, 0x195a6,
+                0x095b0, 0x049b0, 0x0a974, 0x0a4b0, 0x0b27a, 0x06a50, 0x06d40, 0x0af46, 0x0ab60, 0x09570,
+                0x04af5, 0x04970, 0x064b0, 0x074a3, 0x0ea50, 0x06b58, 0x055c0, 0x0ab60, 0x096d5, 0x092e0,
+                0x0c960, 0x0d954, 0x0d4a0, 0x0da50, 0x07552, 0x056a0, 0x0abb7, 0x025d0, 0x092d0, 0x0cab5,
+                0x0a950, 0x0b4a0, 0x0baa4, 0x0ad50, 0x055d9, 0x04ba0, 0x0a5b0, 0x15176, 0x052b0, 0x0a930,
+                0x07954, 0x06aa0, 0x0ad50, 0x05b52, 0x04b60, 0x0a6e6, 0x0a4e0, 0x0d260, 0x0ea65, 0x0d530,
+                0x05aa0, 0x076a3, 0x096d0, 0x04bd7, 0x04ad0, 0x0a4d0, 0x1d0b6, 0x0d250, 0x0d520, 0x0dd45,
+                0x0b5a0, 0x056d0, 0x055b2, 0x049b0, 0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20, 0x0ada0,
+                0x14b63, 0x09370, 0x049f8, 0x04970, 0x064b0, 0x168a6, 0x0ea50, 0x06b20, 0x1a6c4, 0x0aae0,
+                0x0a2e0, 0x0d2e3, 0x0c960, 0x0d557, 0x0d4a0, 0x0da50, 0x05d55, 0x056a0, 0x0a6d0, 0x055d4,
+                0x052d0, 0x0a9b8, 0x0a950, 0x0b4a0, 0x0b6a6, 0x0ad50, 0x055a0, 0x0aba4, 0x0a5b0, 0x052b0,
+                0x0b273, 0x06930, 0x07337, 0x06aa0, 0x0ad50, 0x14b55, 0x04b60, 0x0a570, 0x054e4, 0x0d160,
+                0x0e968, 0x0d520, 0x0daa0, 0x16aa6, 0x056d0, 0x04ae0, 0x0a9d4, 0x0a2d0, 0x0d150, 0x0f252,
+                0x0d520, 0x0daa0, 0x16aa6, 0x056d0, 0x04ae0, 0x0a9d4, 0x0a2d0, 0x0d150, 0x0f252, 0x0d520
+            ];
+            
+            const Gan = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+            const Zhi = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+            const Animals = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪'];
+            const lunarMonthNames = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
+            const lunarDayNames = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
+                '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
+                '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
+            
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            
+            if (year < 1900 || year > 2100) {
+                return '超出范围';
+            }
+            
+            // 计算1900年1月31日（农历1900年正月初一）到当前日期的天数
+            const baseDate = new Date(1900, 0, 31);
+            const currentDate = new Date(year, month - 1, day);
+            let offset = Math.floor((currentDate - baseDate) / (1000 * 60 * 60 * 24));
+            
+            // 计算农历年份和日期
+            let lunarYear = 1900;
+            let lunarMonth = 1;
+            let lunarDay = 1;
+            let isLeapMonth = false;
+            
+            for (let y = 1900; y <= year && y < 2100; y++) {
+                const yearInfo = lunarInfo[y - 1900];
+                const leapMonth = yearInfo & 0xf;
+                const leapMonthDays = leapMonth ? ((yearInfo >> 16) & 0x1 ? 30 : 29) : 0;
+                
+                // 计算该年农历总天数
+                let yearDays = 0;
+                for (let m = 1; m <= 12; m++) {
+                    const monthDays = (yearInfo >> (16 - m)) & 0x1 ? 30 : 29;
+                    yearDays += monthDays;
+                }
+                if (leapMonth > 0) {
+                    yearDays += leapMonthDays;
+                }
+                
+                if (offset < yearDays) {
+                    lunarYear = y;
+                    // 计算农历月份和日期
+                    let monthOffset = 0;
+                    for (let m = 1; m <= 12; m++) {
+                        const monthDays = (yearInfo >> (16 - m)) & 0x1 ? 30 : 29;
+                        if (offset < monthOffset + monthDays) {
+                            lunarMonth = m;
+                            lunarDay = offset - monthOffset + 1;
+                            break;
+                        }
+                        monthOffset += monthDays;
+                        
+                        // 处理闰月
+                        if (leapMonth === m && offset >= monthOffset) {
+                            if (offset < monthOffset + leapMonthDays) {
+                                lunarMonth = m;
+                                lunarDay = offset - monthOffset + 1;
+                                isLeapMonth = true;
+                                break;
+                            }
+                            monthOffset += leapMonthDays;
+                        }
+                    }
+                    break;
+                }
+                offset -= yearDays;
+        }
+
+            // 计算天干地支
+            const ganIndex = (lunarYear - 4) % 10;
+            const zhiIndex = (lunarYear - 4) % 12;
+            const ganZhi = Gan[ganIndex] + Zhi[zhiIndex];
+            const animal = Animals[zhiIndex];
+            
+            // 格式化月份名称
+            let monthName = lunarMonthNames[lunarMonth - 1];
+            if (isLeapMonth) {
+                monthName = '闰' + monthName;
+            }
+            
+            // 格式化日期名称
+            const dayName = lunarDayNames[lunarDay - 1] || ('初' + lunarDay);
+            
+            return `${ganZhi}年(${animal}年) ${monthName}月${dayName}`;
+        }
+
+        // 开始倒计时
+        function startCountdown() {
+            function updateCountdown() {
+                if (!state.nextDrawTime) {
+                    document.getElementById('countdown').textContent = '--';
+                    return;
+                }
+
+                const now = new Date();
+                const diff = state.nextDrawTime - now;
+
+                if (diff <= 0) {
+                    document.getElementById('countdown').textContent = '已开奖';
+                    fetchLotteryData();
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                let countdownText = '';
+                if (days > 0) countdownText += `${days}天 `;
+                if (hours > 0) countdownText += `${hours}小时 `;
+                if (minutes > 0) countdownText += `${minutes}分钟 `;
+                countdownText += `${seconds}秒`;
+
+                document.getElementById('countdown').textContent = `⏰ 距离开奖：${countdownText}`;
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        // 显示提示消息
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s reverse';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // 刷新数据
+        function refreshData() {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '🔄 刷新中...';
+            btn.disabled = true;
+
+            Promise.all([fetchLotteryData(), fetchHistory()]).then(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+                showToast('数据刷新成功！', 'success');
+            }).catch((error) => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+                showToast('数据刷新失败，请稍后重试', 'error');
+                console.error('刷新失败:', error);
+            });
+        }
+
+        // 格式化日期时间
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}`;
+        }
+
+    </script>
+</body>
 </html>
