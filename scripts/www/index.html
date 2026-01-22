@@ -1,11 +1,1874 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PakePlus</title>
-    </head>
-    <body>
-        PakePlus
-    </body>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸运飞艇开奖查询工具 - 作者：飞机@laomao12315</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'SimHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .realtime-panel {
+            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .realtime-card {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .realtime-card.blue {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .realtime-card.green {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+        }
+
+        .realtime-card h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .realtime-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .realtime-card .sub-value {
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            min-height: 600px;
+        }
+
+        .sidebar {
+            width: 380px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 300px);
+        }
+
+        .content-panel {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #34495e;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin-right: 5px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+        }
+
+        .btn-teal {
+            background: linear-gradient(135deg, #16a085 0%, #138d75 100%);
+            color: white;
+        }
+
+        .status-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .status-bar.success {
+            background: #27ae60;
+        }
+
+        .status-bar.error {
+            background: #e74c3c;
+        }
+
+        .status-bar.loading {
+            background: #3498db;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+        }
+
+        .results-table thead {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+        }
+
+        .results-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .results-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 13px;
+        }
+
+        .results-table tbody tr:hover {
+            background: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .results-table tbody tr.selected {
+            background: #e3f2fd;
+        }
+
+        .detail-panel {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .detail-panel h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .detail-panel pre {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            margin: -30px -30px 20px -30px;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            color: #7f8c8d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #9b59b6;
+            border-bottom-color: #9b59b6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .prediction-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .prediction-table th {
+            background: #34495e;
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .prediction-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .prediction-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .number-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #3498db;
+            color: white;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 2px;
+        }
+
+        .number-badge.high {
+            background: #2ecc71;
+        }
+
+        .number-badge.medium {
+            background: #f39c12;
+        }
+
+        .number-badge.low {
+            background: #e74c3c;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .result-count {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-left: 15px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>幸运飞艇开奖查询工具</h1>
+            <p>作者：飞机@laomao12315</p>
+        </div>
+
+        <div class="realtime-panel">
+            <div class="realtime-card blue">
+                <h3>最新期号</h3>
+                <div class="value" id="latestPeriod">--</div>
+            </div>
+            <div class="realtime-card green">
+                <h3>上一期开奖</h3>
+                <div class="sub-value" id="lastPeriod">期号: --</div>
+                <div class="value" id="lastResult" style="font-size: 24px;">开奖号码: --</div>
+            </div>
+            <div class="realtime-card">
+                <h3>自动刷新</h3>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoRefresh" checked>
+                    <label for="autoRefresh">启用自动刷新</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="section">
+                    <div class="section-title">数据源</div>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="source" value="credit" checked>
+                            信用盘
+                        </label>
+                        <label>
+                            <input type="radio" name="source" value="official">
+                            官方盘
+                        </label>
+                    </div>
+                </div>
+
+                <div class="section" id="creditSection">
+                    <div class="section-title">信用盘查询</div>
+                    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+                        <p style="font-size: 12px; color: #856404; margin: 0; line-height: 1.5;">
+                            <strong>提示：</strong>如果API查询失败（CORS错误），请切换到"官方盘" → "文本输入"方式手动粘贴数据。
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <label>查询数量:</label>
+                        <select id="creditPageSize">
+                            <option value="10">10</option>
+                            <option value="20" selected>20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>期号查询:</label>
+                        <input type="text" id="creditPeriod" placeholder="留空查询最新">
+                    </div>
+                    <button class="btn btn-primary" onclick="queryCredit()">查询信用盘</button>
+                </div>
+
+                <div class="section" id="officialSection" style="display: none;">
+                    <div class="section-title">官方盘查询</div>
+                    <div class="form-group">
+                        <label>查询方式:</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="officialMode" value="api" checked>
+                                API查询
+                            </label>
+                            <label>
+                                <input type="radio" name="officialMode" value="text">
+                                文本输入
+                            </label>
+                        </div>
+                    </div>
+                    <div id="officialApiSection">
+                        <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+                            <p style="font-size: 12px; color: #856404; margin: 0; line-height: 1.5;">
+                                <strong>提示：</strong>如果API查询失败（CORS错误），请切换到"文本输入"方式手动粘贴数据。
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label>查询数量:</label>
+                            <select id="officialPageSize">
+                                <option value="10">10</option>
+                                <option value="20" selected>20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>期号查询:</label>
+                            <input type="text" id="officialPeriod" placeholder="留空查询最新">
+                        </div>
+                        <button class="btn btn-success" onclick="queryOfficialApi()">查询官方盘</button>
+                    </div>
+                    <div id="officialTextSection" style="display: none;">
+                        <div style="background: #d1ecf1; border-left: 4px solid #17a2b8; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+                            <p style="font-size: 12px; color: #0c5460; margin: 0 0 8px 0; font-weight: bold;">数据格式示例：</p>
+                            <pre style="font-size: 11px; color: #0c5460; margin: 0; background: white; padding: 8px; border-radius: 4px; overflow-x: auto;">20260121083,06,07,02,05,01,10,03,04,09,08,2026-01-21 19:58:40
+20260121082,01,02,03,04,05,06,07,08,09,10,2026-01-21 19:53:40</pre>
+                        </div>
+                        <div class="form-group">
+                            <label>数据输入:</label>
+                            <textarea id="officialText" rows="8" placeholder="格式: 期号,号码1,号码2,...,号码10,日期时间&#10;示例: 20260121083,06,07,02,05,01,10,03,04,09,08,2026-01-21 19:58:40"></textarea>
+                        </div>
+                        <button class="btn btn-success" onclick="parseOfficial()">解析官方盘数据</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">定位胆预测</div>
+                    <div class="form-group">
+                        <label>预测方式:</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="predictMode" value="algorithm" checked>
+                                算法预测
+                            </label>
+                            <label>
+                                <input type="radio" name="predictMode" value="ai">
+                                AI预测
+                            </label>
+                        </div>
+                    </div>
+                    <div id="algorithmPredictSection">
+                        <p style="font-size: 12px; color: #7f8c8d; margin-bottom: 10px;">基于历史数据的算法预测</p>
+                        <button class="btn btn-purple" onclick="predictPosition()">开始预测</button>
+                    </div>
+                    <div id="aiPredictSection" style="display: none;">
+                        <div class="form-group">
+                            <label>API Token:</label>
+                            <input type="password" id="deepseekToken" placeholder="DeepSeek API Token">
+                        </div>
+                        <p style="font-size: 11px; color: #7f8c8d; margin-bottom: 10px;">(将自动获取100期数据)</p>
+                        <button class="btn btn-teal" onclick="predictWithDeepseek()">开始预测</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2 style="color: #2c3e50; font-size: 20px;">开奖结果</h2>
+                    <span class="result-count" id="resultCount"></span>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>期号</th>
+                                <th>开奖号码</th>
+                                <th>日期时间</th>
+                                <th>两面(1-10)</th>
+                                <th>龙虎(1-5)</th>
+                                <th>冠亚和值</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 40px; color: #7f8c8d;">
+                                    暂无数据，请先查询
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="detail-panel" id="detailPanel" style="display: none;">
+                    <h3>详细信息</h3>
+                    <pre id="detailContent"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar" id="statusBar" style="display: none;">就绪</div>
+
+    <!-- 预测结果模态框 -->
+    <div class="modal" id="predictionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>定位胆预测结果（推荐前3个号码）</h2>
+            </div>
+            <div class="tabs" id="predictionTabs"></div>
+            <div id="predictionContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentResults = [];
+        let currentSource = null;
+        let autoRefreshInterval = null;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 数据源切换
+            document.querySelectorAll('input[name="source"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'credit') {
+                        document.getElementById('creditSection').style.display = 'block';
+                        document.getElementById('officialSection').style.display = 'none';
+                    } else {
+                        document.getElementById('creditSection').style.display = 'none';
+                        document.getElementById('officialSection').style.display = 'block';
+                    }
+                });
+            });
+
+            // 官方盘查询方式切换
+            document.querySelectorAll('input[name="officialMode"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'api') {
+                        document.getElementById('officialApiSection').style.display = 'block';
+                        document.getElementById('officialTextSection').style.display = 'none';
+                    } else {
+                        document.getElementById('officialApiSection').style.display = 'none';
+                        document.getElementById('officialTextSection').style.display = 'block';
+                    }
+                });
+            });
+
+            // 预测方式切换
+            document.querySelectorAll('input[name="predictMode"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'algorithm') {
+                        document.getElementById('algorithmPredictSection').style.display = 'block';
+                        document.getElementById('aiPredictSection').style.display = 'none';
+                    } else {
+                        document.getElementById('algorithmPredictSection').style.display = 'none';
+                        document.getElementById('aiPredictSection').style.display = 'block';
+                    }
+                });
+            });
+
+            // 自动刷新
+            document.getElementById('autoRefresh').addEventListener('change', function() {
+                if (this.checked) {
+                    startAutoRefresh();
+                } else {
+                    stopAutoRefresh();
+                }
+            });
+
+            // 表格行点击事件
+            document.getElementById('resultsBody').addEventListener('click', function(e) {
+                const row = e.target.closest('tr');
+                if (row && row.dataset.index !== undefined) {
+                    document.querySelectorAll('.results-table tbody tr').forEach(r => {
+                        r.classList.remove('selected');
+                    });
+                    row.classList.add('selected');
+                    showDetail(parseInt(row.dataset.index));
+                }
+            });
+
+            // 点击模态框外部关闭
+            document.getElementById('predictionModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closePredictionModal();
+                }
+            });
+        });
+
+        // 工具函数
+        function showStatus(message, type = '') {
+            const statusBar = document.getElementById('statusBar');
+            statusBar.textContent = message;
+            statusBar.className = 'status-bar ' + type;
+            statusBar.style.display = 'block';
+            setTimeout(() => {
+                statusBar.style.display = 'none';
+            }, 3000);
+        }
+
+        function parseResult(resultStr) {
+            return resultStr.split(',').map(x => parseInt(x.trim()));
+        }
+
+        function isOdd(num) {
+            return num % 2 === 1;
+        }
+
+        function isBig(num) {
+            return num >= 6;
+        }
+
+        function calculateTwoSides(result, position) {
+            const num = result[position];
+            return {
+                '单双': isOdd(num) ? '单' : '双',
+                '大小': isBig(num) ? '大' : '小',
+                '号码': num
+            };
+        }
+
+        function calculateDragonTiger(result, position) {
+            const positions = [
+                [0, 9],   // 冠军 vs 第十名
+                [1, 8],   // 亚军 vs 第九名
+                [2, 7],   // 第三名 vs 第八名
+                [3, 6],   // 第四名 vs 第七名
+                [4, 5],   // 第五名 vs 第六名
+            ];
+            
+            if (position >= positions.length) return '无效';
+            
+            const [firstPos, secondPos] = positions[position];
+            const firstNum = result[firstPos];
+            const secondNum = result[secondPos];
+            
+            if (firstNum > secondNum) return '龙';
+            if (firstNum < secondNum) return '虎';
+            return '和';
+        }
+
+        function calculateCrownSum(result) {
+            const crown = result[0];
+            const sub = result[1];
+            const total = crown + sub;
+            
+            return {
+                '和值': total,
+                '单双': isOdd(total) ? '单' : '双',
+                '大小': total > 11 ? '大' : (total < 11 ? '小' : '和'),
+                '组合': `${crown.toString().padStart(2, '0')}${sub.toString().padStart(2, '0')}`
+            };
+        }
+
+        // CORS代理列表（按优先级排序）
+        const CORS_PROXIES = [
+            { name: 'allorigins', url: 'https://api.allorigins.win/raw?url=' },
+            { name: 'codetabs', url: 'https://api.codetabs.com/v1/proxy?quest=' },
+            { name: 'direct', url: '' } // 直接请求（最后尝试）
+        ];
+
+        // API调用（使用代理或CORS处理）
+        async function fetchWithCORS(url, options = {}) {
+            let lastError = null;
+            
+            // 尝试多个代理
+            for (let i = 0; i < CORS_PROXIES.length; i++) {
+                const proxy = CORS_PROXIES[i];
+                const targetUrl = proxy.url ? proxy.url + encodeURIComponent(url) : url;
+                
+                try {
+                    const fetchOptions = {
+                        method: options.method || 'GET',
+                        mode: 'cors',
+                        headers: {
+                            'Accept': '*/*',
+                            'Accept-Language': 'zh-CN,zh;q=0.9',
+                            ...options.headers
+                        }
+                    };
+                    
+                    const response = await fetch(targetUrl, fetchOptions);
+                    
+                    // 检查响应状态
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    // 获取响应文本
+                    const text = await response.text();
+                    if (!text || text.trim() === '') {
+                        throw new Error('响应为空');
+                    }
+                    
+                    // 尝试解析 JSON
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (parseError) {
+                        // allorigins 可能返回包装格式
+                        if (proxy.name === 'allorigins') {
+                            try {
+                                const wrapped = JSON.parse(text);
+                                if (wrapped.contents) {
+                                    data = JSON.parse(wrapped.contents);
+                                } else {
+                                    throw parseError;
+                                }
+                            } catch (e) {
+                                throw parseError;
+                            }
+                        } else {
+                            throw parseError;
+                        }
+                    }
+                    
+                    // 验证数据格式
+                    if (data && (data.list || Array.isArray(data))) {
+                        return data;
+                    } else {
+                        throw new Error('返回数据格式不正确');
+                    }
+                } catch (error) {
+                    lastError = error;
+                    console.warn(`代理 ${proxy.name || 'direct'} 失败:`, error.message);
+                    // 继续尝试下一个代理
+                    if (i < CORS_PROXIES.length - 1) {
+                        continue;
+                    }
+                }
+            }
+            
+            // 所有代理都失败
+            const errorMsg = lastError?.message || '未知错误';
+            throw new Error(`网络请求失败: ${errorMsg}`);
+        }
+
+        // 显示错误提示对话框
+        function showErrorDialog(title, message, suggestions = []) {
+            const modal = document.createElement('div');
+            modal.className = 'modal show';
+            modal.style.zIndex = '3000';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+                        <h2>${title}</h2>
+                    </div>
+                    <div style="padding: 20px;">
+                        <p style="margin-bottom: 15px; color: #2c3e50; line-height: 1.6;">${message}</p>
+                        ${suggestions.length > 0 ? `
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                                <h3 style="color: #34495e; margin-bottom: 10px; font-size: 14px;">建议解决方案：</h3>
+                                <ul style="color: #7f8c8d; line-height: 1.8; padding-left: 20px;">
+                                    ${suggestions.map(s => `<li>${s}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        <button class="btn btn-primary" onclick="this.closest('.modal').remove()" style="margin-top: 20px; width: auto; padding: 10px 30px;">确定</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // 查询信用盘
+        async function queryCredit() {
+            const pageSize = document.getElementById('creditPageSize').value;
+            const period = document.getElementById('creditPeriod').value.trim();
+            
+            showStatus('正在查询信用盘数据...', 'loading');
+            
+            try {
+                const params = new URLSearchParams({
+                    code: 'XXYFT',
+                    version: '2',
+                    pageSize: pageSize,
+                    pageNumber: '1',
+                    period: period || '',
+                    _: Date.now().toString()
+                });
+                
+                const url = `https://xn--dck9c.xn--1230a25-nr4fyc2j2b5k9i7e.xn--q9jyb4c/lotData/getLotteryResultList.do?${params}`;
+                
+                const data = await fetchWithCORS(url);
+                
+                if (data && data.list) {
+                    displayResults(data.list, 'credit');
+                    showStatus(`成功加载 ${data.list.length} 条记录`, 'success');
+                } else {
+                    throw new Error('查询失败，返回数据格式不正确');
+                }
+            } catch (error) {
+                const errorMsg = error.message || '查询失败';
+                showStatus(`查询失败: ${errorMsg}`, 'error');
+                console.error('Query error:', error);
+                
+                // 显示详细错误提示
+                if (errorMsg.includes('CORS') || errorMsg.includes('fetch') || errorMsg.includes('代理')) {
+                    showErrorDialog(
+                        '网络请求失败',
+                        '由于浏览器安全限制（CORS），无法直接访问外部API。',
+                        [
+                            '切换到"官方盘" → "文本输入"方式，手动粘贴数据',
+                            '安装浏览器CORS扩展插件（如：CORS Unblock）',
+                            '使用本地代理服务器或后端API',
+                            '联系管理员配置CORS代理服务'
+                        ]
+                    );
+                }
+            }
+        }
+
+        // 查询官方盘API
+        async function queryOfficialApi() {
+            const pageSize = document.getElementById('officialPageSize').value;
+            const period = document.getElementById('officialPeriod').value.trim();
+            
+            showStatus('正在查询官方盘数据...', 'loading');
+            
+            try {
+                const params = new URLSearchParams({
+                    code: 'XXYFT',
+                    version: '1',
+                    pageSize: pageSize,
+                    pageNumber: '1',
+                    period: period || '',
+                    _: Date.now().toString()
+                });
+                
+                const url = `https://xn--dck9c.xn--1230a25-nr4fyc2j2b5k9i7e.xn--q9jyb4c/lotData/getLotteryResultList.do?${params}`;
+                
+                const data = await fetchWithCORS(url);
+                
+                if (data && data.list) {
+                    displayResults(data.list, 'official');
+                    showStatus(`成功加载 ${data.list.length} 条记录`, 'success');
+                } else {
+                    throw new Error('查询失败，返回数据格式不正确');
+                }
+            } catch (error) {
+                const errorMsg = error.message || '查询失败';
+                showStatus(`查询失败: ${errorMsg}`, 'error');
+                console.error('Query error:', error);
+                
+                // 显示详细错误提示
+                if (errorMsg.includes('CORS') || errorMsg.includes('fetch') || errorMsg.includes('代理')) {
+                    showErrorDialog(
+                        '网络请求失败',
+                        '由于浏览器安全限制（CORS），无法直接访问外部API。',
+                        [
+                            '切换到"文本输入"方式，手动粘贴数据（推荐）',
+                            '安装浏览器CORS扩展插件（如：CORS Unblock）',
+                            '使用本地代理服务器或后端API',
+                            '联系管理员配置CORS代理服务'
+                        ]
+                    );
+                }
+            }
+        }
+
+        // 解析官方盘文本数据
+        function parseOfficial() {
+            const text = document.getElementById('officialText').value.trim();
+            if (!text) {
+                showStatus('请输入官方盘数据', 'error');
+                return;
+            }
+            
+            showStatus('正在解析官方盘数据...', 'loading');
+            
+            try {
+                const results = [];
+                const lines = text.split('\n');
+                
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (!trimmed || trimmed.startsWith('#')) continue;
+                    
+                    const parts = trimmed.split(/[,\s]+/);
+                    if (parts.length >= 11) {
+                        const period = parts[0];
+                        const resultNums = parts.slice(1, 11);
+                        const dateStr = parts.slice(11).join(' ') || new Date().toLocaleString('zh-CN');
+                        
+                        const resultStr = resultNums.map(x => parseInt(x).toString().padStart(2, '0')).join(',');
+                        
+                        results.push({
+                            period: period,
+                            result: resultStr,
+                            date: dateStr,
+                            id: results.length
+                        });
+                    }
+                }
+                
+                if (results.length > 0) {
+                    displayResults(results, 'official');
+                    showStatus(`成功解析 ${results.length} 条记录`, 'success');
+                } else {
+                    showStatus('未能解析出有效数据，请检查数据格式', 'error');
+                }
+            } catch (error) {
+                showStatus(`解析出错: ${error.message}`, 'error');
+            }
+        }
+
+        // 显示结果
+        function displayResults(results, source) {
+            currentResults = results;
+            currentSource = source;
+            
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = '';
+            
+            if (results.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #7f8c8d;">暂无数据</td></tr>';
+                return;
+            }
+            
+            results.forEach((result, index) => {
+                const resultNums = parseResult(result.result);
+                
+                // 计算两面（显示第1名）
+                const twoSides = calculateTwoSides(resultNums, 0);
+                const twoSidesStr = `1名: ${twoSides.号码}(${twoSides.单双}/${twoSides.大小})`;
+                
+                // 计算龙虎（显示前5个）
+                const dragonTigerList = [];
+                for (let i = 0; i < 5; i++) {
+                    const dt = calculateDragonTiger(resultNums, i);
+                    dragonTigerList.push(`${i+1}:${dt}`);
+                }
+                const dragonTigerStr = dragonTigerList.join(' ');
+                
+                // 计算冠亚和值
+                const crownInfo = calculateCrownSum(resultNums);
+                const crownStr = `${crownInfo.和值}(${crownInfo.单双}/${crownInfo.大小})`;
+                
+                const row = document.createElement('tr');
+                row.dataset.index = index;
+                row.innerHTML = `
+                    <td>${result.period}</td>
+                    <td>${result.result}</td>
+                    <td>${result.date || ''}</td>
+                    <td>${twoSidesStr}</td>
+                    <td>${dragonTigerStr}</td>
+                    <td>${crownStr}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // 更新实时信息
+            if (results.length > 0) {
+                const latest = results[0];
+                document.getElementById('lastPeriod').textContent = `期号: ${latest.period}`;
+                document.getElementById('lastResult').textContent = `开奖号码: ${latest.result}`;
+                
+                // 计算最新期号
+                try {
+                    const lastPeriod = latest.period;
+                    if (lastPeriod.length >= 8) {
+                        const datePart = lastPeriod.substring(0, 8);
+                        const seqPart = lastPeriod.substring(8) || '0';
+                        const nextSeq = parseInt(seqPart) + 1;
+                        
+                        if (nextSeq > 180) {
+                            const lastDate = new Date(
+                                parseInt(datePart.substring(0, 4)),
+                                parseInt(datePart.substring(4, 6)) - 1,
+                                parseInt(datePart.substring(6, 8))
+                            );
+                            lastDate.setDate(lastDate.getDate() + 1);
+                            const nextDateStr = lastDate.getFullYear().toString() +
+                                (lastDate.getMonth() + 1).toString().padStart(2, '0') +
+                                lastDate.getDate().toString().padStart(2, '0');
+                            document.getElementById('latestPeriod').textContent = `${nextDateStr}001`;
+                        } else {
+                            document.getElementById('latestPeriod').textContent = `${datePart}${nextSeq.toString().padStart(3, '0')}`;
+                        }
+                    } else {
+                        document.getElementById('latestPeriod').textContent = (parseInt(lastPeriod) + 1).toString();
+                    }
+                } catch (e) {
+                    document.getElementById('latestPeriod').textContent = latest.period;
+                }
+            }
+            
+            document.getElementById('resultCount').textContent = `共 ${results.length} 条记录`;
+        }
+
+        // 显示详细信息
+        function showDetail(index) {
+            const result = currentResults[index];
+            if (!result) return;
+            
+            const resultNums = parseResult(result.result);
+            const detailLines = [];
+            
+            detailLines.push(`期号: ${result.period}`);
+            detailLines.push(`开奖号码: ${result.result}`);
+            detailLines.push(`日期时间: ${result.date || ''}`);
+            detailLines.push('');
+            detailLines.push('='.repeat(50));
+            detailLines.push('1~10名两面结果:');
+            detailLines.push('-'.repeat(50));
+            
+            for (let i = 0; i < 10; i++) {
+                const twoSides = calculateTwoSides(resultNums, i);
+                detailLines.push(`第${i+1}名: ${twoSides.号码.toString().padStart(2)} - 单双: ${twoSides.单双.padStart(2)} | 大小: ${twoSides.大小.padStart(2)}`);
+            }
+            
+            detailLines.push('');
+            detailLines.push('='.repeat(50));
+            detailLines.push('1~5名龙虎结果:');
+            detailLines.push('-'.repeat(50));
+            
+            const dragonTigerNames = ['冠军', '亚军', '第三名', '第四名', '第五名'];
+            for (let i = 0; i < 5; i++) {
+                const dt = calculateDragonTiger(resultNums, i);
+                detailLines.push(`${dragonTigerNames[i]}: ${dt}`);
+            }
+            
+            detailLines.push('');
+            detailLines.push('='.repeat(50));
+            detailLines.push('冠亚和值结果:');
+            detailLines.push('-'.repeat(50));
+            
+            const crownInfo = calculateCrownSum(resultNums);
+            detailLines.push(`冠军号码: ${resultNums[0]}`);
+            detailLines.push(`亚军号码: ${resultNums[1]}`);
+            detailLines.push(`冠亚和值: ${crownInfo.和值}`);
+            detailLines.push(`单双: ${crownInfo.单双}`);
+            detailLines.push(`大小: ${crownInfo.大小}`);
+            detailLines.push(`组合: ${crownInfo.组合}`);
+            
+            document.getElementById('detailContent').textContent = detailLines.join('\n');
+            document.getElementById('detailPanel').style.display = 'block';
+        }
+
+        // 定位胆预测算法
+        class PositionPrediction {
+            constructor(historyData) {
+                this.historyData = historyData;
+                this.positions = 10;
+                this.numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            }
+
+            algorithm1Frequency() {
+                const positionCounts = {};
+                for (let pos = 0; pos < this.positions; pos++) {
+                    positionCounts[pos] = {};
+                }
+                
+                for (const record of this.historyData) {
+                    const resultStr = record.result || '';
+                    if (!resultStr) continue;
+                    
+                    try {
+                        const numbers = parseResult(resultStr);
+                        for (let pos = 0; pos < this.positions; pos++) {
+                            if (pos < numbers.length) {
+                                const num = numbers[pos];
+                                positionCounts[pos][num] = (positionCounts[pos][num] || 0) + 1;
+                            }
+                        }
+                    } catch (e) {
+                        continue;
+                    }
+                }
+                
+                const predictions = {};
+                const totalPeriods = this.historyData.length;
+                
+                for (let pos = 0; pos < this.positions; pos++) {
+                    const counts = positionCounts[pos];
+                    const frequencies = this.numbers.map(num => [
+                        num,
+                        (counts[num] || 0) / (totalPeriods || 1)
+                    ]);
+                    frequencies.sort((a, b) => b[1] - a[1]);
+                    predictions[pos] = frequencies.length > 0 ? frequencies : 
+                        this.numbers.map(num => [num, 0.1]);
+                }
+                
+                return predictions;
+            }
+
+            algorithm2Missing() {
+                const lastAppear = {};
+                for (let pos = 0; pos < this.positions; pos++) {
+                    lastAppear[pos] = {};
+                    for (const num of this.numbers) {
+                        lastAppear[pos][num] = -1;
+                    }
+                }
+                
+                this.historyData.forEach((record, idx) => {
+                    const resultStr = record.result || '';
+                    if (!resultStr) return;
+                    
+                    try {
+                        const numbers = parseResult(resultStr);
+                        for (let pos = 0; pos < this.positions; pos++) {
+                            if (pos < numbers.length) {
+                                lastAppear[pos][numbers[pos]] = idx;
+                            }
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                });
+                
+                const predictions = {};
+                const currentPeriod = this.historyData.length;
+                
+                for (let pos = 0; pos < this.positions; pos++) {
+                    const missingValues = this.numbers.map(num => {
+                        const lastIdx = lastAppear[pos][num];
+                        const missing = lastIdx === -1 ? currentPeriod : (currentPeriod - 1 - lastIdx);
+                        const score = Math.min(missing / Math.max(currentPeriod, 1), 1.0);
+                        return [num, score];
+                    });
+                    missingValues.sort((a, b) => b[1] - a[1]);
+                    predictions[pos] = missingValues;
+                }
+                
+                return predictions;
+            }
+
+            algorithm3Trend() {
+                if (this.historyData.length < 3) {
+                    return this.algorithm1Frequency();
+                }
+                
+                const recentN = Math.min(20, this.historyData.length);
+                const recentData = this.historyData.slice(0, recentN);
+                
+                const recentCounts = {};
+                for (let pos = 0; pos < this.positions; pos++) {
+                    recentCounts[pos] = {};
+                }
+                
+                for (const record of recentData) {
+                    const resultStr = record.result || '';
+                    if (!resultStr) continue;
+                    
+                    try {
+                        const numbers = parseResult(resultStr);
+                        for (let pos = 0; pos < this.positions; pos++) {
+                            if (pos < numbers.length) {
+                                const num = numbers[pos];
+                                recentCounts[pos][num] = (recentCounts[pos][num] || 0) + 1;
+                            }
+                        }
+                    } catch (e) {
+                        continue;
+                    }
+                }
+                
+                const trendScores = {};
+                for (let pos = 0; pos < this.positions; pos++) {
+                    trendScores[pos] = {};
+                }
+                
+                if (recentData.length >= 3) {
+                    const recent3 = recentData.slice(0, 3);
+                    for (const record of recent3) {
+                        const resultStr = record.result || '';
+                        if (!resultStr) continue;
+                        
+                        try {
+                            const numbers = parseResult(resultStr);
+                            for (let pos = 0; pos < this.positions; pos++) {
+                                if (pos < numbers.length) {
+                                    trendScores[pos][numbers[pos]] = (trendScores[pos][numbers[pos]] || 0) + 0.3;
+                                }
+                            }
+                        } catch (e) {
+                            continue;
+                        }
+                    }
+                }
+                
+                const predictions = {};
+                for (let pos = 0; pos < this.positions; pos++) {
+                    const scores = this.numbers.map(num => {
+                        const recentFreq = (recentCounts[pos][num] || 0) / recentN;
+                        const trendScore = trendScores[pos][num] || 0;
+                        const totalScore = recentFreq * 0.7 + trendScore * 0.3;
+                        return [num, totalScore];
+                    });
+                    scores.sort((a, b) => b[1] - a[1]);
+                    predictions[pos] = scores;
+                }
+                
+                return predictions;
+            }
+
+            calculateWinRate(predictions, testData) {
+                if (!testData || testData.length === 0) {
+                    const winRates = {};
+                    for (let pos = 0; pos < this.positions; pos++) {
+                        winRates[pos] = 0.0;
+                    }
+                    return winRates;
+                }
+                
+                const wins = {};
+                const total = {};
+                for (let pos = 0; pos < this.positions; pos++) {
+                    wins[pos] = 0;
+                    total[pos] = 0;
+                }
+                
+                for (const record of testData) {
+                    const resultStr = record.result || '';
+                    if (!resultStr) continue;
+                    
+                    try {
+                        const numbers = parseResult(resultStr);
+                        for (let pos = 0; pos < this.positions; pos++) {
+                            if (pos < numbers.length) {
+                                total[pos]++;
+                                const top3 = predictions[pos].slice(0, 3).map(p => p[0]);
+                                if (top3.includes(numbers[pos])) {
+                                    wins[pos]++;
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        continue;
+                    }
+                }
+                
+                const winRates = {};
+                for (let pos = 0; pos < this.positions; pos++) {
+                    winRates[pos] = total[pos] > 0 ? wins[pos] / total[pos] : 0.0;
+                }
+                
+                return winRates;
+            }
+
+            predictAll() {
+                if (!this.historyData || this.historyData.length === 0) {
+                    return {};
+                }
+                
+                const splitIdx = Math.floor(this.historyData.length * 0.8);
+                const trainData = splitIdx > 0 ? this.historyData.slice(0, splitIdx) : this.historyData;
+                const testData = splitIdx < this.historyData.length ? this.historyData.slice(splitIdx) : [];
+                
+                const trainPredictor = new PositionPrediction(trainData);
+                
+                const pred1 = trainPredictor.algorithm1Frequency();
+                const pred2 = trainPredictor.algorithm2Missing();
+                const pred3 = trainPredictor.algorithm3Trend();
+                
+                const winRates = {
+                    '频率分析': trainPredictor.calculateWinRate(pred1, testData),
+                    '遗漏分析': trainPredictor.calculateWinRate(pred2, testData),
+                    '趋势分析': trainPredictor.calculateWinRate(pred3, testData)
+                };
+                
+                const comprehensive = this.calculateComprehensive(pred1, pred2, pred3, winRates);
+                
+                return {
+                    algorithm1: pred1,
+                    algorithm2: pred2,
+                    algorithm3: pred3,
+                    comprehensive: comprehensive,
+                    win_rates: winRates
+                };
+            }
+
+            calculateComprehensive(pred1, pred2, pred3, winRates) {
+                const comprehensive = {};
+                
+                const algoWeights = {};
+                for (const algoName of ['频率分析', '遗漏分析', '趋势分析']) {
+                    const rates = winRates[algoName] || {};
+                    const avgRate = Object.values(rates).reduce((a, b) => a + b, 0) / (Object.keys(rates).length || 1);
+                    algoWeights[algoName] = avgRate || 0.25;
+                }
+                
+                const totalWeight = Object.values(algoWeights).reduce((a, b) => a + b, 0);
+                if (totalWeight > 0) {
+                    for (const key in algoWeights) {
+                        algoWeights[key] = algoWeights[key] / totalWeight;
+                    }
+                } else {
+                    algoWeights['频率分析'] = 0.33;
+                    algoWeights['遗漏分析'] = 0.33;
+                    algoWeights['趋势分析'] = 0.34;
+                }
+                
+                for (let pos = 0; pos < this.positions; pos++) {
+                    const numScores = {};
+                    
+                    if (pred1[pos]) {
+                        pred1[pos].forEach((pred, idx) => {
+                            const [num, score] = pred;
+                            const rankWeight = (pred1[pos].length - idx) / pred1[pos].length;
+                            numScores[num] = (numScores[num] || 0) + score * algoWeights['频率分析'] * rankWeight;
+                        });
+                    }
+                    
+                    if (pred2[pos]) {
+                        pred2[pos].forEach((pred, idx) => {
+                            const [num, score] = pred;
+                            const rankWeight = (pred2[pos].length - idx) / pred2[pos].length;
+                            numScores[num] = (numScores[num] || 0) + score * algoWeights['遗漏分析'] * rankWeight;
+                        });
+                    }
+                    
+                    if (pred3[pos]) {
+                        pred3[pos].forEach((pred, idx) => {
+                            const [num, score] = pred;
+                            const rankWeight = (pred3[pos].length - idx) / pred3[pos].length;
+                            numScores[num] = (numScores[num] || 0) + score * algoWeights['趋势分析'] * rankWeight;
+                        });
+                    }
+                    
+                    const sorted = Object.entries(numScores).map(([num, score]) => [parseInt(num), score]);
+                    sorted.sort((a, b) => b[1] - a[1]);
+                    
+                    if (sorted.length > 0) {
+                        const maxScore = sorted[0][1];
+                        if (maxScore > 0) {
+                            comprehensive[pos] = sorted.map(([num, score]) => [num, score / maxScore]);
+                        } else {
+                            comprehensive[pos] = sorted;
+                        }
+                    } else {
+                        comprehensive[pos] = [];
+                    }
+                }
+                
+                return comprehensive;
+            }
+        }
+
+        // 预测定位胆
+        function predictPosition() {
+            if (!currentResults || currentResults.length < 10) {
+                showStatus('历史数据不足，至少需要10期数据才能进行预测', 'error');
+                return;
+            }
+            
+            showStatus('正在分析历史数据...', 'loading');
+            
+            setTimeout(() => {
+                try {
+                    const predictor = new PositionPrediction(currentResults);
+                    const predictions = predictor.predictAll();
+                    
+                    if (predictions && Object.keys(predictions).length > 0) {
+                        showPredictionResults(predictions);
+                        showStatus('预测完成', 'success');
+                    } else {
+                        showStatus('预测失败', 'error');
+                    }
+                } catch (error) {
+                    showStatus(`预测出错: ${error.message}`, 'error');
+                }
+            }, 100);
+        }
+
+        // DeepSeek AI预测
+        async function predictWithDeepseek() {
+            const token = document.getElementById('deepseekToken').value.trim();
+            if (!token) {
+                showStatus('请输入DeepSeek API Token', 'error');
+                return;
+            }
+            
+            if (!currentResults || currentResults.length < 10) {
+                showStatus('历史数据不足，至少需要10期数据', 'error');
+                return;
+            }
+            
+            showStatus('正在获取100期数据并使用DeepSeek预测...', 'loading');
+            
+            try {
+                let allData = currentResults;
+                if (currentResults.length < 100) {
+                    // 尝试获取更多数据
+                    try {
+                        const params = new URLSearchParams({
+                            code: 'XXYFT',
+                            version: currentSource === 'credit' ? '2' : '1',
+                            pageSize: '100',
+                            pageNumber: '1',
+                            _: Date.now().toString()
+                        });
+                        const url = `https://xn--dck9c.xn--1230a25-nr4fyc2j2b5k9i7e.xn--q9jyb4c/lotData/getLotteryResultList.do?${params}`;
+                        const data = await fetchWithCORS(url);
+                        if (data && data.list) {
+                            allData = data.list;
+                        }
+                    } catch (e) {
+                        console.warn('Failed to fetch more data, using current:', e);
+                    }
+                } else {
+                    allData = currentResults.slice(0, 100);
+                }
+                
+                // 调用DeepSeek API
+                const recentData = allData.slice(0, 50);
+                let historyText = "历史开奖数据（从最新到最旧）：\n";
+                recentData.forEach(record => {
+                    historyText += `期号${record.period}: ${record.result} (时间: ${record.date || ''})\n`;
+                });
+                
+                const prompt = `请分析以下幸运飞艇历史开奖数据，预测下一期（第1名到第10名）的定位胆号码。
+
+${historyText}
+
+**预测要求：**
+1. 分析每个位置（第1名到第10名）的历史号码出现规律
+2. 考虑号码的频率、遗漏值、趋势变化等因素
+3. 为每个位置预测3个最可能的号码，按可能性从高到低排序
+4. 给出每个号码的置信度（0-100%）
+
+**输出格式（必须严格遵循JSON格式）：**
+{
+  "predictions": {
+    "1": [{"number": 号码, "confidence": 置信度百分比}, ...],
+    "2": [{"number": 号码, "confidence": 置信度百分比}, ...],
+    ...
+    "10": [{"number": 号码, "confidence": 置信度百分比}, ...]
+  },
+  "overall_confidence": 总体置信度百分比,
+  "analysis": "简要分析说明"
+}
+
+**注意：**
+- 每个位置必须预测3个号码（1-10之间的整数）
+- 置信度必须是0-100之间的数字
+- 只返回JSON，不要有其他文字说明`;
+
+                const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'deepseek-chat',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: '你是一个专业的彩票数据分析专家，擅长分析历史开奖数据并预测下一期的开奖号码。'
+                            },
+                            {
+                                role: 'user',
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.3,
+                        max_tokens: 2000
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API请求失败: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                const content = result.choices[0].message.content;
+                
+                // 解析结果
+                const jsonMatch = content.match(/\{[\s\S]*\}/);
+                if (!jsonMatch) {
+                    throw new Error('无法解析AI返回结果');
+                }
+                
+                const parsed = JSON.parse(jsonMatch[0]);
+                const deepseekResult = {
+                    predictions: {},
+                    confidence: (parsed.overall_confidence || 50) / 100.0,
+                    analysis: parsed.analysis || ''
+                };
+                
+                if (parsed.predictions) {
+                    for (const [posStr, predList] of Object.entries(parsed.predictions)) {
+                        const pos = parseInt(posStr) - 1;
+                        deepseekResult.predictions[pos] = predList.map(pred => {
+                            const num = pred.number || pred.号码 || 0;
+                            const conf = pred.confidence || pred.置信度 || 0;
+                            const score = conf > 1 ? conf / 100.0 : conf;
+                            return [parseInt(num), score];
+                        });
+                    }
+                }
+                
+                // 同时运行传统算法
+                const predictor = new PositionPrediction(allData);
+                const traditionalPredictions = predictor.predictAll();
+                
+                if (traditionalPredictions) {
+                    traditionalPredictions.deepseek = deepseekResult;
+                    showPredictionResults(traditionalPredictions);
+                } else {
+                    showPredictionResults({ deepseek: deepseekResult });
+                }
+                
+                showStatus('预测完成', 'success');
+            } catch (error) {
+                showStatus(`DeepSeek预测失败: ${error.message}`, 'error');
+                console.error('DeepSeek error:', error);
+            }
+        }
+
+        // 显示预测结果
+        function showPredictionResults(predictions) {
+            const modal = document.getElementById('predictionModal');
+            const tabsContainer = document.getElementById('predictionTabs');
+            const contentContainer = document.getElementById('predictionContent');
+            
+            tabsContainer.innerHTML = '';
+            contentContainer.innerHTML = '';
+            
+            const hasDeepseek = 'deepseek' in predictions;
+            
+            const algorithms = [];
+            if (hasDeepseek) {
+                const deepseekData = predictions.deepseek || {};
+                algorithms.push({
+                    key: 'deepseek',
+                    name: 'DeepSeek AI',
+                    data: deepseekData.predictions || {},
+                    info: deepseekData
+                });
+            }
+            
+            algorithms.push(
+                {
+                    key: 'comprehensive',
+                    name: '综合推荐',
+                    data: predictions.comprehensive || {},
+                    info: null
+                },
+                {
+                    key: 'algorithm1',
+                    name: '频率分析',
+                    data: predictions.algorithm1 || {},
+                    info: null
+                },
+                {
+                    key: 'algorithm2',
+                    name: '遗漏分析',
+                    data: predictions.algorithm2 || {},
+                    info: null
+                },
+                {
+                    key: 'algorithm3',
+                    name: '趋势分析',
+                    data: predictions.algorithm3 || {},
+                    info: null
+                }
+            );
+            
+            const winRates = predictions.win_rates || {};
+            const deepseekInfo = predictions.deepseek || {};
+            
+            // 计算综合推荐胜率
+            const comprehensiveWinRates = {};
+            if (winRates && Object.keys(winRates).length > 0) {
+                for (let pos = 0; pos < 10; pos++) {
+                    const rates = [
+                        winRates['频率分析']?.[pos] || 0,
+                        winRates['遗漏分析']?.[pos] || 0,
+                        winRates['趋势分析']?.[pos] || 0
+                    ];
+                    comprehensiveWinRates[pos] = rates.reduce((a, b) => a + b, 0) / rates.length;
+                }
+            }
+            
+            algorithms.forEach((algo, index) => {
+                // 创建标签页
+                const tab = document.createElement('button');
+                tab.className = 'tab' + (index === 0 ? ' active' : '');
+                tab.textContent = algo.name;
+                if (algo.key === 'deepseek') {
+                    const conf = (algo.info?.confidence || 0) * 100;
+                    tab.textContent += ` (置信度: ${conf.toFixed(1)}%)`;
+                } else if (algo.key === 'comprehensive') {
+                    const rate = (comprehensiveWinRates[0] || 0) * 100;
+                    tab.textContent += ` (胜率: ${rate.toFixed(1)}%)`;
+                } else {
+                    const algoName = algo.name;
+                    const rate = (winRates[algoName]?.[0] || 0) * 100;
+                    tab.textContent += ` (胜率: ${rate.toFixed(1)}%)`;
+                }
+                tab.onclick = () => switchTab(index);
+                tabsContainer.appendChild(tab);
+                
+                // 创建内容
+                const content = document.createElement('div');
+                content.className = 'tab-content' + (index === 0 ? ' active' : '');
+                content.id = `tab-content-${index}`;
+                
+                const table = document.createElement('table');
+                table.className = 'prediction-table';
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>位置</th>
+                            <th>推荐1</th>
+                            <th>推荐2</th>
+                            <th>推荐3</th>
+                            <th>${algo.key === 'deepseek' ? '置信度' : '胜率'}</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                `;
+                
+                const tbody = table.querySelector('tbody');
+                const positionNames = ['第1名', '第2名', '第3名', '第4名', '第5名', 
+                                     '第6名', '第7名', '第8名', '第9名', '第10名'];
+                
+                for (let pos = 0; pos < 10; pos++) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${positionNames[pos]}</td>`;
+                    
+                    const posPredictions = algo.data[pos] || [];
+                    for (let colIdx = 0; colIdx < 3; colIdx++) {
+                        const cell = document.createElement('td');
+                        if (colIdx < posPredictions.length) {
+                            const [num, score] = posPredictions[colIdx];
+                            const scorePct = score * 100;
+                            cell.innerHTML = `<span class="number-badge ${scorePct > 15 ? 'high' : scorePct > 10 ? 'medium' : 'low'}">${num} (${scorePct.toFixed(1)}%)</span>`;
+                        } else {
+                            cell.textContent = '--';
+                        }
+                        row.appendChild(cell);
+                    }
+                    
+                    // 胜率/置信度
+                    const rateCell = document.createElement('td');
+                    if (algo.key === 'deepseek') {
+                        const posConf = posPredictions.length > 0 ? posPredictions[0][1] * 100 : (algo.info?.confidence || 0) * 100;
+                        rateCell.innerHTML = `<strong style="color: ${posConf < 20 ? '#e74c3c' : posConf < 30 ? '#f39c12' : '#2ecc71'}">${posConf.toFixed(1)}%</strong>`;
+                    } else if (algo.key === 'comprehensive') {
+                        const posWinRate = (comprehensiveWinRates[pos] || 0) * 100;
+                        rateCell.innerHTML = `<strong style="color: ${posWinRate < 20 ? '#e74c3c' : posWinRate < 30 ? '#f39c12' : '#2ecc71'}">${posWinRate.toFixed(1)}%</strong>`;
+                    } else {
+                        const algoName = algo.name;
+                        const posWinRate = (winRates[algoName]?.[pos] || 0) * 100;
+                        rateCell.innerHTML = `<strong style="color: ${posWinRate < 20 ? '#e74c3c' : posWinRate < 30 ? '#f39c12' : '#2ecc71'}">${posWinRate.toFixed(1)}%</strong>`;
+                    }
+                    row.appendChild(rateCell);
+                    
+                    tbody.appendChild(row);
+                }
+                
+                content.appendChild(table);
+                
+                // 说明
+                const infoDiv = document.createElement('div');
+                infoDiv.style.cssText = 'margin-top: 20px; padding: 15px; background: #ecf0f1; border-radius: 8px;';
+                let infoText = '';
+                if (algo.key === 'deepseek') {
+                    infoText = algo.info?.analysis || 'DeepSeek AI：基于深度学习的智能预测，综合分析历史数据的复杂模式和规律';
+                } else if (algo.key === 'comprehensive') {
+                    infoText = '综合推荐：综合三个算法的结果，根据各算法的历史胜率进行加权，给出最优推荐';
+                } else if (algo.key === 'algorithm1') {
+                    infoText = '频率分析：统计每个位置每个号码的历史出现频率，推荐频率最高的号码';
+                } else if (algo.key === 'algorithm2') {
+                    infoText = '遗漏分析：分析每个号码的遗漏值（未出现的期数），推荐遗漏较大的冷号';
+                } else {
+                    infoText = '趋势分析：结合最近期的出现频率和变化趋势，综合预测下一期';
+                }
+                infoDiv.textContent = infoText;
+                content.appendChild(infoDiv);
+                
+                contentContainer.appendChild(content);
+            });
+            
+            modal.classList.add('show');
+        }
+
+        function switchTab(index) {
+            document.querySelectorAll('.tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('.tab-content').forEach((content, i) => {
+                content.classList.toggle('active', i === index);
+            });
+        }
+
+        function closePredictionModal() {
+            document.getElementById('predictionModal').classList.remove('show');
+        }
+
+        // 自动刷新
+        function startAutoRefresh() {
+            stopAutoRefresh();
+            autoRefreshInterval = setInterval(() => {
+                if (currentSource === 'credit') {
+                    queryCredit();
+                } else if (currentSource === 'official') {
+                    queryOfficialApi();
+                }
+            }, 30000); // 30秒刷新一次
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        }
+
+        // ESC键关闭模态框
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePredictionModal();
+            }
+        });
+    </script>
+</body>
 </html>
