@@ -336,7 +336,7 @@
             background: white;
             border-radius: 15px;
             padding: 30px;
-            max-width: 1200px;
+            max-width: 1400px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
@@ -406,14 +406,16 @@
         .prediction-table th {
             background: #34495e;
             color: white;
-            padding: 12px;
+            padding: 10px 8px;
             text-align: center;
+            font-size: 13px;
         }
 
         .prediction-table td {
-            padding: 12px;
+            padding: 10px 8px;
             text-align: center;
             border-bottom: 1px solid #ecf0f1;
+            font-size: 13px;
         }
 
         .prediction-table tbody tr:nth-child(even) {
@@ -655,7 +657,7 @@
     <div class="modal" id="predictionModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>定位胆预测结果（推荐前3个号码）</h2>
+                <h2>定位胆预测结果（推荐前7个号码）</h2>
             </div>
             <div class="tabs" id="predictionTabs"></div>
             <div id="predictionContent"></div>
@@ -1372,8 +1374,8 @@
                         for (let pos = 0; pos < this.positions; pos++) {
                             if (pos < numbers.length) {
                                 total[pos]++;
-                                const top3 = predictions[pos].slice(0, 3).map(p => p[0]);
-                                if (top3.includes(numbers[pos])) {
+                                const top7 = predictions[pos].slice(0, 7).map(p => p[0]);
+                                if (top7.includes(numbers[pos])) {
                                     wins[pos]++;
                                 }
                             }
@@ -1569,7 +1571,7 @@ ${historyText}
 **预测要求：**
 1. 分析每个位置（第1名到第10名）的历史号码出现规律
 2. 考虑号码的频率、遗漏值、趋势变化等因素
-3. 为每个位置预测3个最可能的号码，按可能性从高到低排序
+3. 为每个位置预测7个最可能的号码，按可能性从高到低排序
 4. 给出每个号码的置信度（0-100%）
 
 **输出格式（必须严格遵循JSON格式）：**
@@ -1585,7 +1587,7 @@ ${historyText}
 }
 
 **注意：**
-- 每个位置必须预测3个号码（1-10之间的整数）
+- 每个位置必须预测7个号码（1-10之间的整数）
 - 置信度必须是0-100之间的数字
 - 只返回JSON，不要有其他文字说明`;
 
@@ -1608,7 +1610,7 @@ ${historyText}
                             }
                         ],
                         temperature: 0.3,
-                        max_tokens: 2000
+                        max_tokens: 3000
                     })
                 });
                 
@@ -1760,6 +1762,10 @@ ${historyText}
                             <th>推荐1</th>
                             <th>推荐2</th>
                             <th>推荐3</th>
+                            <th>推荐4</th>
+                            <th>推荐5</th>
+                            <th>推荐6</th>
+                            <th>推荐7</th>
                             <th>${algo.key === 'deepseek' ? '置信度' : '胜率'}</th>
                         </tr>
                     </thead>
@@ -1775,7 +1781,7 @@ ${historyText}
                     row.innerHTML = `<td>${positionNames[pos]}</td>`;
                     
                     const posPredictions = algo.data[pos] || [];
-                    for (let colIdx = 0; colIdx < 3; colIdx++) {
+                    for (let colIdx = 0; colIdx < 7; colIdx++) {
                         const cell = document.createElement('td');
                         if (colIdx < posPredictions.length) {
                             const [num, score] = posPredictions[colIdx];
