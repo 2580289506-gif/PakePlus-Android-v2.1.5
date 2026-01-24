@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>幸运飞艇开奖查询工具 - 作者：飞机@laomao12315</title>
+    <title>飞艇/赛车开奖查询工具 - 作者：飞机@laomao12315</title>
     <style>
         * {
             margin: 0;
@@ -474,7 +474,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>幸运飞艇开奖查询工具</h1>
+            <h1 id="mainTitle">幸运飞艇开奖查询工具</h1>
             <p>作者：飞机@laomao12315</p>
         </div>
 
@@ -499,6 +499,24 @@
 
         <div class="main-content">
             <div class="sidebar">
+                <div class="section">
+                    <div class="section-title">游戏类型</div>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="gameType" value="幸运飞艇" checked>
+                            幸运飞艇
+                        </label>
+                        <label>
+                            <input type="radio" name="gameType" value="疯狂飞艇">
+                            疯狂飞艇
+                        </label>
+                        <label>
+                            <input type="radio" name="gameType" value="疯狂赛车">
+                            疯狂赛车
+                        </label>
+                    </div>
+                </div>
+
                 <div class="section">
                     <div class="section-title">数据源</div>
                     <div class="radio-group">
@@ -670,8 +688,36 @@
         let currentSource = null;
         let autoRefreshInterval = null;
 
+        // 游戏类型映射
+        const gameCodeMap = {
+            '幸运飞艇': 'XXYFT',
+            '疯狂飞艇': 'FKFT',
+            '疯狂赛车': 'FKSC'
+        };
+
+        // 获取当前游戏类型
+        function getCurrentGameType() {
+            const selected = document.querySelector('input[name="gameType"]:checked');
+            return selected ? selected.value : '幸运飞艇';
+        }
+
+        // 获取当前游戏代码
+        function getCurrentGameCode() {
+            return gameCodeMap[getCurrentGameType()] || 'XXYFT';
+        }
+
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
+
+            // 游戏类型切换
+            document.querySelectorAll('input[name="gameType"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const gameType = this.value;
+                    document.getElementById('mainTitle').textContent = `${gameType}开奖查询工具`;
+                    document.title = `${gameType}开奖查询工具 - 作者：飞机@laomao12315`;
+                });
+            });
+
             // 数据源切换
             document.querySelectorAll('input[name="source"]').forEach(radio => {
                 radio.addEventListener('change', function() {
@@ -920,11 +966,11 @@
             const pageSize = document.getElementById('creditPageSize').value;
             const period = document.getElementById('creditPeriod').value.trim();
             
-            showStatus('正在查询信用盘数据...', 'loading');
+            showStatus(`正在查询${getCurrentGameType()}信用盘数据...`, 'loading');
             
             try {
                 const params = new URLSearchParams({
-                    code: 'XXYFT',
+                    code: getCurrentGameCode(),
                     version: '2',
                     pageSize: pageSize,
                     pageNumber: '1',
@@ -968,11 +1014,11 @@
             const pageSize = document.getElementById('officialPageSize').value;
             const period = document.getElementById('officialPeriod').value.trim();
             
-            showStatus('正在查询官方盘数据...', 'loading');
+            showStatus(`正在查询${getCurrentGameType()}官方盘数据...`, 'loading');
             
             try {
                 const params = new URLSearchParams({
-                    code: 'XXYFT',
+                    code: getCurrentGameCode(),
                     version: '1',
                     pageSize: pageSize,
                     pageNumber: '1',
@@ -1111,27 +1157,35 @@
                 // 计算最新期号
                 try {
                     const lastPeriod = latest.period;
-                    if (lastPeriod.length >= 8) {
-                        const datePart = lastPeriod.substring(0, 8);
-                        const seqPart = lastPeriod.substring(8) || '0';
-                        const nextSeq = parseInt(seqPart) + 1;
-                        
-                        if (nextSeq > 180) {
-                            const lastDate = new Date(
-                                parseInt(datePart.substring(0, 4)),
-                                parseInt(datePart.substring(4, 6)) - 1,
-                                parseInt(datePart.substring(6, 8))
-                            );
-                            lastDate.setDate(lastDate.getDate() + 1);
-                            const nextDateStr = lastDate.getFullYear().toString() +
-                                (lastDate.getMonth() + 1).toString().padStart(2, '0') +
-                                lastDate.getDate().toString().padStart(2, '0');
-                            document.getElementById('latestPeriod').textContent = `${nextDateStr}001`;
-                        } else {
-                            document.getElementById('latestPeriod').textContent = `${datePart}${nextSeq.toString().padStart(3, '0')}`;
-                        }
-                    } else {
+                    const gameType = getCurrentGameType();
+                    
+                    // 疯狂赛车和疯狂飞艇：全天开售，直接加1
+                    if (gameType === '疯狂赛车' || gameType === '疯狂飞艇') {
                         document.getElementById('latestPeriod').textContent = (parseInt(lastPeriod) + 1).toString();
+                    } else {
+                        // 幸运飞艇：考虑跨天和每天180期的限制
+                        if (lastPeriod.length >= 8) {
+                            const datePart = lastPeriod.substring(0, 8);
+                            const seqPart = lastPeriod.substring(8) || '0';
+                            const nextSeq = parseInt(seqPart) + 1;
+                            
+                            if (nextSeq > 180) {
+                                const lastDate = new Date(
+                                    parseInt(datePart.substring(0, 4)),
+                                    parseInt(datePart.substring(4, 6)) - 1,
+                                    parseInt(datePart.substring(6, 8))
+                                );
+                                lastDate.setDate(lastDate.getDate() + 1);
+                                const nextDateStr = lastDate.getFullYear().toString() +
+                                    (lastDate.getMonth() + 1).toString().padStart(2, '0') +
+                                    lastDate.getDate().toString().padStart(2, '0');
+                                document.getElementById('latestPeriod').textContent = `${nextDateStr}001`;
+                            } else {
+                                document.getElementById('latestPeriod').textContent = `${datePart}${nextSeq.toString().padStart(3, '0')}`;
+                            }
+                        } else {
+                            document.getElementById('latestPeriod').textContent = (parseInt(lastPeriod) + 1).toString();
+                        }
                     }
                 } catch (e) {
                     document.getElementById('latestPeriod').textContent = latest.period;
@@ -1539,7 +1593,7 @@
                     // 尝试获取更多数据
                     try {
                         const params = new URLSearchParams({
-                            code: 'XXYFT',
+                            code: getCurrentGameCode(),
                             version: currentSource === 'credit' ? '2' : '1',
                             pageSize: '100',
                             pageNumber: '1',
@@ -1564,7 +1618,8 @@
                     historyText += `期号${record.period}: ${record.result} (时间: ${record.date || ''})\n`;
                 });
                 
-                const prompt = `请分析以下幸运飞艇历史开奖数据，预测下一期（第1名到第10名）的定位胆号码。
+                const gameType = getCurrentGameType();
+                const prompt = `请分析以下${gameType}历史开奖数据，预测下一期（第1名到第10名）的定位胆号码。
 
 ${historyText}
 
