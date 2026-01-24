@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-幸运飞艇开奖查询工具
+飞艇/赛车开奖查询工具
+支持幸运飞艇、疯狂飞艇、疯狂赛车三种游戏类型
 支持信用盘和官方盘查询，以及投注结果计算
 """
 
@@ -418,7 +419,7 @@ class DeepSeekPredictor:
     API_URL = "https://api.deepseek.com/v1/chat/completions"
     
     @staticmethod
-    def predict_position(token: str, history_data: List[Dict]) -> Optional[Dict]:
+    def predict_position(token: str, history_data: List[Dict], game_type: str = '幸运飞艇') -> Optional[Dict]:
         """
         使用DeepSeek AI预测定位胆
         返回: {
@@ -434,7 +435,7 @@ class DeepSeekPredictor:
             recent_data = history_data[:100]
             
             # 构建专业提示词
-            prompt = DeepSeekPredictor._build_prompt(recent_data)
+            prompt = DeepSeekPredictor._build_prompt(recent_data, game_type)
             
             # 调用DeepSeek API
             headers = {
@@ -496,7 +497,7 @@ class DeepSeekPredictor:
             return None
     
     @staticmethod
-    def _build_prompt(history_data: List[Dict]) -> str:
+    def _build_prompt(history_data: List[Dict], game_type: str = '幸运飞艇') -> str:
         """构建专业的预测提示词"""
         # 格式化历史数据
         history_text = "历史开奖数据（从最新到最旧）：\n"
@@ -506,7 +507,7 @@ class DeepSeekPredictor:
             date = record.get('date', '')
             history_text += f"期号{period}: {result} (时间: {date})\n"
         
-        prompt = f"""请分析以下幸运飞艇历史开奖数据，预测下一期（第1名到第10名）的定位胆号码。
+        prompt = f"""请分析以下{game_type}历史开奖数据，预测下一期（第1名到第10名）的定位胆号码。
 
 {history_text}
 
@@ -638,13 +639,23 @@ class CreditLotteryAPI:
     
     BASE_URL = "https://xn--dck9c.xn--1230a25-nr4fyc2j2b5k9i7e.xn--q9jyb4c/lotData/getLotteryResultList.do"
     
+    # 游戏类型代码映射
+    GAME_CODES = {
+        '幸运飞艇': 'XXYFT',
+        '疯狂飞艇': 'FKFT',
+        '疯狂赛车': 'FKSC'
+    }
+    
     @staticmethod
-    def get_results(page_size: int = 20, page_number: int = 1, 
+    def get_results(game_type: str = '幸运飞艇', page_size: int = 20, page_number: int = 1, 
                     start_date: str = "", end_date: str = "", 
                     period: str = "") -> Optional[Dict]:
-        """获取开奖结果"""
+        """获取开奖结果
+        game_type: 游戏类型，可选值：'幸运飞艇'、'疯狂飞艇'、'疯狂赛车'
+        """
+        code = CreditLotteryAPI.GAME_CODES.get(game_type, 'XXYFT')
         params = {
-            'code': 'XXYFT',
+            'code': code,
             'version': '2',
             'pageSize': page_size,
             'pageNumber': page_number,
@@ -658,7 +669,7 @@ class CreditLotteryAPI:
             'Accept': '*/*',
             'Accept-Language': 'zh-CN,zh;q=0.9',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            'Referer': 'https://xn--dck9c.xn--1230a25-nr4fyc2j2b5k9i7e.xn--q9jyb4c/lotData/result.do?code=XXYFT&version=2',
+            'Referer': f'https://xn--dck9c.xn--1230a25-nr4fyc2j2b5k9i7e.xn--q9jyb4c/lotData/result.do?code={code}&version=2',
             'X-Requested-With': 'XMLHttpRequest'
         }
         
@@ -676,13 +687,23 @@ class OfficialLotteryAPI:
     
     BASE_URL = "https://xn--dck9c.xn--1230a25-nr4fyc2j2b5k9i7e.xn--q9jyb4c/lotData/getLotteryResultList.do"
     
+    # 游戏类型代码映射
+    GAME_CODES = {
+        '幸运飞艇': 'XXYFT',
+        '疯狂飞艇': 'FKFT',
+        '疯狂赛车': 'FKSC'
+    }
+    
     @staticmethod
-    def get_results(page_size: int = 20, page_number: int = 1, 
+    def get_results(game_type: str = '幸运飞艇', page_size: int = 20, page_number: int = 1, 
                     start_date: str = "", end_date: str = "", 
                     period: str = "") -> Optional[Dict]:
-        """获取开奖结果（官方盘）"""
+        """获取开奖结果（官方盘）
+        game_type: 游戏类型，可选值：'幸运飞艇'、'疯狂飞艇'、'疯狂赛车'
+        """
+        code = OfficialLotteryAPI.GAME_CODES.get(game_type, 'XXYFT')
         params = {
-            'code': 'XXYFT',
+            'code': code,
             'version': '1',  # 官方盘使用version=1
             'pageSize': page_size,
             'pageNumber': page_number,
@@ -696,7 +717,7 @@ class OfficialLotteryAPI:
             'Accept': '*/*',
             'Accept-Language': 'zh-CN,zh;q=0.9',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            'Referer': 'https://xn--dck9c.xn--1230a25-nr4fyc2j2b5k9i7e.xn--q9jyb4c/lotData/result.do?code=XXYFT&version=1',
+            'Referer': f'https://xn--dck9c.xn--1230a25-nr4fyc2j2b5k9i7e.xn--q9jyb4c/lotData/result.do?code={code}&version=1',
             'X-Requested-With': 'XMLHttpRequest'
         }
         
@@ -753,12 +774,15 @@ class LotteryQueryApp:
     
     def __init__(self, root):
         self.root = root
-        self.root.title("幸运飞艇开奖查询工具 - 作者：飞机@laomao12315")
+        self.root.title("飞艇/赛车开奖查询工具 - 作者：飞机@laomao12315")
         self.root.geometry("1400x900")
         self.root.configure(bg='#f0f0f0')
         
         # 初始化字体（需要在setup_styles之前）
         self.default_font = 'TkDefaultFont'
+        
+        # 游戏类型
+        self.game_type = '幸运飞艇'  # 默认游戏类型
         
         # 设置样式
         self.setup_styles()
@@ -877,10 +901,10 @@ class LotteryQueryApp:
         title_frame.pack(fill=tk.X)
         title_frame.pack_propagate(False)
         
-        title_label = tk.Label(title_frame, text="幸运飞艇开奖查询工具", 
+        self.title_label = tk.Label(title_frame, text="幸运飞艇开奖查询工具", 
                                font=(self.default_font, 18, 'bold'),
                                bg='#2c3e50', fg='white')
-        title_label.pack(pady=(12, 2))
+        self.title_label.pack(pady=(12, 2))
         
         author_label = tk.Label(title_frame, text="作者：飞机@laomao12315", 
                                font=(self.default_font, 9),
@@ -894,29 +918,88 @@ class LotteryQueryApp:
         main_container = tk.Frame(self.root, bg='#f0f0f0')
         main_container.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
-        # 左侧面板 - 查询控制
+        # 左侧面板 - 结果显示
         left_panel = tk.Frame(main_container, bg='white', relief=tk.RAISED, bd=1)
-        left_panel.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 10))
-        left_panel.config(width=350)
-        left_panel.pack_propagate(False)
+        left_panel.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 10))
         
-        self.create_query_panel(left_panel)
+        self.create_result_panel(left_panel)
         
-        # 右侧面板 - 结果显示
+        # 右侧面板 - 查询控制
         right_panel = tk.Frame(main_container, bg='white', relief=tk.RAISED, bd=1)
-        right_panel.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        right_panel.pack(side=tk.RIGHT, fill=tk.Y)
+        right_panel.config(width=350)
+        right_panel.pack_propagate(False)
         
-        self.create_result_panel(right_panel)
+        self.create_query_panel(right_panel)
     
     def create_query_panel(self, parent):
         """创建查询面板"""
+        # 创建Canvas和滚动条
+        canvas = tk.Canvas(parent, bg='white', highlightthickness=0)
+        scrollbar = ttk.Scrollbar(parent, orient="vertical", command=canvas.yview)
+        
+        # 创建可滚动的内容Frame
+        content_frame = tk.Frame(canvas, bg='white')
+        
+        # 配置Canvas滚动
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        # 将Canvas和滚动条布局
+        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        
+        # 在Canvas上创建窗口
+        canvas_window = canvas.create_window((0, 0), window=content_frame, anchor="nw")
+        
+        # 更新滚动区域函数
+        def configure_scroll_region(event=None):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+            # 确保Canvas窗口宽度与Canvas一致
+            canvas_width = event.width if event else canvas.winfo_width()
+            if canvas_width > 1:
+                canvas.itemconfig(canvas_window, width=canvas_width)
+        
+        # 绑定事件
+        content_frame.bind("<Configure>", configure_scroll_region)
+        canvas.bind("<Configure>", configure_scroll_region)
+        
+        # 鼠标滚轮支持（Windows和Linux）
+        def on_mousewheel(event):
+            if sys.platform == 'win32':
+                canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+            else:
+                if event.num == 4:
+                    canvas.yview_scroll(-1, "units")
+                elif event.num == 5:
+                    canvas.yview_scroll(1, "units")
+        
+        # Windows使用MouseWheel，Linux使用Button-4和Button-5
+        if sys.platform == 'win32':
+            canvas.bind_all("<MouseWheel>", on_mousewheel)
+        else:
+            canvas.bind_all("<Button-4>", on_mousewheel)
+            canvas.bind_all("<Button-5>", on_mousewheel)
+        
         # 标题
-        title = tk.Label(parent, text="查询控制", font=(self.default_font, 12, 'bold'),
+        title = tk.Label(content_frame, text="查询控制", font=(self.default_font, 12, 'bold'),
                         bg='white', fg='#2c3e50')
         title.pack(pady=15)
         
+        # 游戏类型选择
+        game_type_frame = tk.LabelFrame(content_frame, text="游戏类型", font=(self.default_font, 10),
+                                         bg='white', fg='#34495e', padx=10, pady=10)
+        game_type_frame.pack(fill=tk.X, padx=15, pady=10)
+        
+        self.game_type_var = tk.StringVar(value="幸运飞艇")
+        tk.Radiobutton(game_type_frame, text="幸运飞艇", variable=self.game_type_var, value="幸运飞艇",
+                      font=(self.default_font, 9), bg='white', command=self.on_game_type_change).pack(anchor=tk.W)
+        tk.Radiobutton(game_type_frame, text="疯狂飞艇", variable=self.game_type_var, value="疯狂飞艇",
+                      font=(self.default_font, 9), bg='white', command=self.on_game_type_change).pack(anchor=tk.W)
+        tk.Radiobutton(game_type_frame, text="疯狂赛车", variable=self.game_type_var, value="疯狂赛车",
+                      font=(self.default_font, 9), bg='white', command=self.on_game_type_change).pack(anchor=tk.W)
+        
         # 数据源选择
-        source_frame = tk.LabelFrame(parent, text="数据源", font=(self.default_font, 10),
+        source_frame = tk.LabelFrame(content_frame, text="数据源", font=(self.default_font, 10),
                                      bg='white', fg='#34495e', padx=10, pady=10)
         source_frame.pack(fill=tk.X, padx=15, pady=10)
         
@@ -927,7 +1010,7 @@ class LotteryQueryApp:
                       font=(self.default_font, 9), bg='white', command=self.on_source_change).pack(anchor=tk.W)
         
         # 信用盘查询选项
-        self.credit_frame = tk.LabelFrame(parent, text="信用盘查询", font=(self.default_font, 10),
+        self.credit_frame = tk.LabelFrame(content_frame, text="信用盘查询", font=(self.default_font, 10),
                                           bg='white', fg='#34495e', padx=10, pady=10)
         self.credit_frame.pack(fill=tk.X, padx=15, pady=10)
         
@@ -947,7 +1030,7 @@ class LotteryQueryApp:
         query_btn.pack(pady=15)
         
         # 官方盘查询选项
-        self.official_frame = tk.LabelFrame(parent, text="官方盘查询", font=(self.default_font, 10),
+        self.official_frame = tk.LabelFrame(content_frame, text="官方盘查询", font=(self.default_font, 10),
                                            bg='white', fg='#34495e', padx=10, pady=10)
         
         # 查询方式选择
@@ -998,7 +1081,7 @@ class LotteryQueryApp:
         self.on_official_mode_change()
         
         # 定位胆预测
-        prediction_frame = tk.LabelFrame(parent, text="定位胆预测", font=(self.default_font, 10),
+        prediction_frame = tk.LabelFrame(content_frame, text="定位胆预测", font=(self.default_font, 10),
                                         bg='white', fg='#34495e', padx=10, pady=10)
         prediction_frame.pack(fill=tk.X, padx=15, pady=10)
         
@@ -1047,10 +1130,21 @@ class LotteryQueryApp:
         
         self.on_predict_mode_change()
         
-        # 状态栏
-        self.status_label = tk.Label(parent, text="就绪", font=(self.default_font, 9),
+        # 状态栏（放在内容Frame中，但固定在底部）
+        status_container = tk.Frame(content_frame, bg='white')
+        status_container.pack(fill=tk.X, padx=15, pady=(10, 15))
+        
+        self.status_label = tk.Label(status_container, text="就绪", font=(self.default_font, 9),
                                      bg='white', fg='gray', anchor=tk.W)
-        self.status_label.pack(side=tk.BOTTOM, fill=tk.X, padx=15, pady=10)
+        self.status_label.pack(fill=tk.X)
+        
+        # 存储canvas和content_frame引用以便后续更新
+        self.query_canvas = canvas
+        self.query_content_frame = content_frame
+        
+        # 初始更新滚动区域
+        content_frame.update_idletasks()
+        configure_scroll_region()
         
         self.on_source_change()
     
@@ -1101,17 +1195,13 @@ class LotteryQueryApp:
         self.result_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar_y.pack(side=tk.RIGHT, fill=tk.Y)
         scrollbar_x.pack(side=tk.BOTTOM, fill=tk.X)
-        
-        # 详细信息面板
-        detail_frame = tk.LabelFrame(parent, text="详细信息", font=(self.default_font, 10),
-                                     bg='white', fg='#34495e', padx=10, pady=10)
-        detail_frame.pack(fill=tk.X, padx=5, pady=5)
-        
-        self.detail_text = scrolledtext.ScrolledText(detail_frame, height=8, font=('Consolas', 9))
-        self.detail_text.pack(fill=tk.BOTH, expand=True)
-        
-        # 绑定选择事件
-        self.result_tree.bind('<<TreeviewSelect>>', self.on_result_select)
+    
+    def on_game_type_change(self):
+        """游戏类型切换"""
+        self.game_type = self.game_type_var.get()
+        # 更新标题
+        self.title_label.config(text=f"{self.game_type}开奖查询工具")
+        self.root.title(f"{self.game_type}开奖查询工具 - 作者：飞机@laomao12315")
     
     def on_source_change(self):
         """数据源切换"""
@@ -1133,7 +1223,7 @@ class LotteryQueryApp:
     
     def query_credit(self):
         """查询信用盘数据"""
-        self.status_label.config(text="正在查询信用盘数据...", fg='blue')
+        self.status_label.config(text=f"正在查询{self.game_type}信用盘数据...", fg='blue')
         
         def query_thread():
             try:
@@ -1141,6 +1231,7 @@ class LotteryQueryApp:
                 period = self.period_var.get().strip()
                 
                 data = CreditLotteryAPI.get_results(
+                    game_type=self.game_type,
                     page_size=page_size,
                     period=period if period else ""
                 )
@@ -1158,7 +1249,7 @@ class LotteryQueryApp:
     
     def query_official_api(self):
         """查询官方盘API数据"""
-        self.status_label.config(text="正在查询官方盘数据...", fg='blue')
+        self.status_label.config(text=f"正在查询{self.game_type}官方盘数据...", fg='blue')
         
         def query_thread():
             try:
@@ -1166,6 +1257,7 @@ class LotteryQueryApp:
                 period = self.official_period_var.get().strip()
                 
                 data = OfficialLotteryAPI.get_results(
+                    game_type=self.game_type,
                     page_size=page_size,
                     period=period if period else ""
                 )
@@ -1257,32 +1349,39 @@ class LotteryQueryApp:
             
             # 计算最新期号（上一期期号+1）
             try:
-                # 期号格式通常是：YYYYMMDDXXX（年月日+序号）
                 last_period = latest['period']
-                if len(last_period) >= 8:
-                    # 提取日期部分和序号部分
-                    date_part = last_period[:8]  # YYYYMMDD
-                    seq_part = last_period[8:] if len(last_period) > 8 else ""
-                    
-                    if seq_part:
-                        # 序号+1
-                        next_seq = int(seq_part) + 1
-                        # 检查是否需要进位（每天最多180期）
-                        if next_seq > 180:
-                            # 跨天，需要计算下一天
-                            from datetime import timedelta
-                            last_date = datetime.strptime(date_part, '%Y%m%d')
-                            next_date = last_date + timedelta(days=1)
-                            next_date_str = next_date.strftime('%Y%m%d')
-                            self.latest_period = f"{next_date_str}001"
-                        else:
-                            self.latest_period = f"{date_part}{next_seq:03d}"
-                    else:
-                        # 如果没有序号部分，直接+1
-                        self.latest_period = str(int(last_period) + 1)
-                else:
-                    # 简单格式，直接+1
+                
+                # 疯狂赛车和疯狂飞艇：全天开售，直接加1
+                if self.game_type in ['疯狂赛车', '疯狂飞艇']:
+                    # 直接加1，不需要考虑跨天
                     self.latest_period = str(int(last_period) + 1)
+                else:
+                    # 幸运飞艇：考虑跨天和每天180期的限制
+                    # 期号格式通常是：YYYYMMDDXXX（年月日+序号）
+                    if len(last_period) >= 8:
+                        # 提取日期部分和序号部分
+                        date_part = last_period[:8]  # YYYYMMDD
+                        seq_part = last_period[8:] if len(last_period) > 8 else ""
+                        
+                        if seq_part:
+                            # 序号+1
+                            next_seq = int(seq_part) + 1
+                            # 检查是否需要进位（每天最多180期）
+                            if next_seq > 180:
+                                # 跨天，需要计算下一天
+                                from datetime import timedelta
+                                last_date = datetime.strptime(date_part, '%Y%m%d')
+                                next_date = last_date + timedelta(days=1)
+                                next_date_str = next_date.strftime('%Y%m%d')
+                                self.latest_period = f"{next_date_str}001"
+                            else:
+                                self.latest_period = f"{date_part}{next_seq:03d}"
+                        else:
+                            # 如果没有序号部分，直接+1
+                            self.latest_period = str(int(last_period) + 1)
+                    else:
+                        # 简单格式，直接+1
+                        self.latest_period = str(int(last_period) + 1)
             except:
                 # 如果解析失败，尝试简单+1
                 try:
@@ -1379,9 +1478,9 @@ class LotteryQueryApp:
                 if len(self.current_results) < 100:
                     # 如果当前数据不足100期，尝试获取更多
                     if self.current_source == 'credit':
-                        data = CreditLotteryAPI.get_results(page_size=100)
+                        data = CreditLotteryAPI.get_results(game_type=self.game_type, page_size=100)
                     elif self.current_source == 'official':
-                        data = OfficialLotteryAPI.get_results(page_size=100)
+                        data = OfficialLotteryAPI.get_results(game_type=self.game_type, page_size=100)
                     else:
                         data = None
                     
@@ -1393,7 +1492,7 @@ class LotteryQueryApp:
                     all_data = self.current_results[:100]
                 
                 # 调用DeepSeek预测
-                deepseek_result = DeepSeekPredictor.predict_position(token, all_data)
+                deepseek_result = DeepSeekPredictor.predict_position(token, all_data, self.game_type)
                 
                 if deepseek_result:
                     # 同时运行传统算法预测
@@ -1577,63 +1676,6 @@ class LotteryQueryApp:
                     bg='#ecf0f1', fg='#34495e', wraplength=1100, justify=tk.LEFT).pack(pady=15)
         
         self.status_label.config(text="预测完成", fg='green')
-    
-    def on_result_select(self, event):
-        """选择结果时显示详细信息"""
-        selection = self.result_tree.selection()
-        if not selection:
-            return
-        
-        item = self.result_tree.item(selection[0])
-        period = item['values'][0]
-        result_str = item['values'][1]
-        
-        # 查找完整数据
-        result_data = next((r for r in self.current_results if r['period'] == period), None)
-        if not result_data:
-            return
-        
-        result_nums = LotteryCalculator.parse_result(result_str)
-        
-        # 生成详细信息
-        detail_lines = []
-        detail_lines.append(f"期号: {period}")
-        detail_lines.append(f"开奖号码: {result_str}")
-        detail_lines.append(f"日期时间: {result_data.get('date', '')}")
-        detail_lines.append("")
-        detail_lines.append("=" * 50)
-        detail_lines.append("1~10名两面结果:")
-        detail_lines.append("-" * 50)
-        
-        for i in range(10):
-            two_sides = LotteryCalculator.calculate_two_sides(result_nums, i)
-            detail_lines.append(f"第{i+1}名: {two_sides['号码']:2d} - 单双: {two_sides['单双']:2s} | 大小: {two_sides['大小']:2s}")
-        
-        detail_lines.append("")
-        detail_lines.append("=" * 50)
-        detail_lines.append("1~5名龙虎结果:")
-        detail_lines.append("-" * 50)
-        
-        dragon_tiger_names = ['冠军', '亚军', '第三名', '第四名', '第五名']
-        for i in range(5):
-            dt = LotteryCalculator.calculate_dragon_tiger(result_nums, i)
-            detail_lines.append(f"{dragon_tiger_names[i]}: {dt}")
-        
-        detail_lines.append("")
-        detail_lines.append("=" * 50)
-        detail_lines.append("冠亚和值结果:")
-        detail_lines.append("-" * 50)
-        
-        crown_info = LotteryCalculator.calculate_crown_sum(result_nums)
-        detail_lines.append(f"冠军号码: {result_nums[0]}")
-        detail_lines.append(f"亚军号码: {result_nums[1]}")
-        detail_lines.append(f"冠亚和值: {crown_info['和值']}")
-        detail_lines.append(f"单双: {crown_info['单双']}")
-        detail_lines.append(f"大小: {crown_info['大小']}")
-        detail_lines.append(f"组合: {crown_info['组合']}")
-        
-        self.detail_text.delete("1.0", tk.END)
-        self.detail_text.insert("1.0", "\n".join(detail_lines))
     
 
 
